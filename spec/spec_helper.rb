@@ -14,6 +14,8 @@ end
 
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'llt/tokenizer'
+require 'llt/db_handler/stub'
+require 'support/matchers/tokenizer'
 
 if defined?(LLT::Logger)
  LLT::Logger.level = nil

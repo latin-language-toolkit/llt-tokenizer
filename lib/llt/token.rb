@@ -3,12 +3,11 @@ require 'llt/helpers/functions'
 
 module LLT
   class Token
-    include Containable
-
     require 'llt/token/word'
     require 'llt/token/punctuation'
     require 'llt/token/filler'
 
+    include Core::Containable
     include Helpers::Functions
     #include Phonology
 

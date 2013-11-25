@@ -1,13 +1,16 @@
+require 'array_scanner'
 require 'llt/core'
+require 'llt/constants/abbreviations'
 require 'llt/db_handler/prometheus'
 
 module LLT
   class Tokenizer
+    require 'llt/token'
+
     include Core::Serviceable
     include Constants::Abbreviations
 
     uses_db { DbHandler::Prometheus.new }
-
 
     def self.tokenize(input)
       new(input).tokenize
@@ -183,10 +186,10 @@ module LLT
     def create_tokens
       @worker.map! do |el|
         case el
-        when ABBR_NAME_WITH_DOT       then LLT::Filler.new(el)
-        when ROMAN_DATE_EXPR_WITH_DOT then LLT::Filler.new(el)
-        when PUNCTUATION              then LLT::Punctuation.new(el)
-        else                               LLT::Word.new(el)
+        when ABBR_NAME_WITH_DOT       then Token::Filler.new(el)
+        when ROMAN_DATE_EXPR_WITH_DOT then Token::Filler.new(el)
+        when PUNCTUATION              then Token::Punctuation.new(el)
+        else                               Token::Word.new(el)
         end
       end
     end

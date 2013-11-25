@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe LLT::Tokenizer do
   let(:tokenizer) { LLT::Tokenizer.new }
   let(:txt) { "Atque Sex. et M. Cicero." }
@@ -173,7 +175,7 @@ describe LLT::Tokenizer do
     examples.each do |klass, elements|
       elements.each do |e|
         it "#{e} is a LLT::#{klass}" do
-          sentence_element_test(e).should be_an_instance_of LLT.const_get(klass)
+          sentence_element_test(e).should be_an_instance_of LLT::Token.const_get(klass)
         end
       end
     end

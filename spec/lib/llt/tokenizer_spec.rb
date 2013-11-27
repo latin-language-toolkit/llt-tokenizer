@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe LLT::Tokenizer do
+  before(:all) { LLT::DbHandler::Stub.setup }
+
   let(:tokenizer) { LLT::Tokenizer.new }
   let(:txt) { "Atque Sex. et M. Cicero." }
   let(:long_text) { "C. Caesar Antoniusque ratione superavit." }
@@ -115,8 +117,6 @@ describe LLT::Tokenizer do
     end
 
     context "when confronted with -ne" do
-      LLT::DbHandler::Stub.setup
-
       examples = { "honestumne" => "-ne honestum",
                    "omniane"    => "-ne omnia",
 

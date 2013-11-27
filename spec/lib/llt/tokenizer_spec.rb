@@ -3,7 +3,8 @@ require 'spec_helper'
 describe LLT::Tokenizer do
   before(:all) { LLT::DbHandler::Stub.setup }
 
-  let(:tokenizer) { LLT::Tokenizer.new }
+  let(:stub_db) { LLT::DbHandler::Stub.new }
+  let(:tokenizer) { LLT::Tokenizer.new(db: stub_db) }
   let(:txt) { "Atque Sex. et M. Cicero." }
   let(:long_text) { "C. Caesar Antoniusque ratione superavit." }
   let(:date) { "a. d. V Kal. Apr." }
@@ -154,8 +155,11 @@ describe LLT::Tokenizer do
 
     context "when confronted with -ve" do
       examples = {
-        'sive' => 'sive',
+        'sive'     => 'sive',
         'pluresve' => '-ve plures',
+        'aestive'  => 'aestive',
+        'serve'    => 'serve',
+        'suave'    => 'suave',
       }
 
       examples.each do |example, expected|

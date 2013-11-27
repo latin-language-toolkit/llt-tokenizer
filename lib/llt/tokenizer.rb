@@ -122,6 +122,7 @@ module LLT
       # Implement caching here
       ne_corrections
       que_corrections
+      ve_corrections
     end
 
     def que_corrections
@@ -148,7 +149,7 @@ module LLT
     def ne_corrections
       corrections = []
       @worker.each_with_index do |w, i|
-        if w == "-ne"
+        if w == enclitic('ne')
           next_el = @worker[i + 1]
 
           entries = []
@@ -168,13 +169,30 @@ module LLT
     end
 
     def ve_corrections
+      corrections = []
+      @worker.each_with_index do |w, i|
+        if w == enclitic('ve')
+          next_el = @worker[i + 1]
+
+          entries = []
+          entries += lookup(next_el + 'v', :adjective, :stem, 1)
+          entries += lookup(next_el + 'v', :adjective, :stem, 3)
+          entries += lookup(next_el + 'v', :noun,      :stem, [2, 5])
+
+          if entries.any?
+            corrections << i - corrections.size
+          end
+        end
+      end
+
+      reverse_splittings(corrections)
     end
 
     def lookup(string, type, column, inflection_class = 3)
       string = (type == :persona ? string : string.downcase)
       query = {
                 type: type, stem_type: column, stem: string,
-                restrictions: { type: :inflection_class, values: [inflection_class] }
+                restrictions: { type: :inflection_class, values: Array(inflection_class) }
               }
       @db.look_up_stem(query)
     end

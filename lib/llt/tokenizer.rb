@@ -2,6 +2,7 @@ require 'llt/core'
 require 'llt/constants/abbreviations'
 require 'llt/core_extensions/array'
 require 'llt/db_handler/prometheus'
+require 'llt/helpers/metrical'
 
 module LLT
   class Tokenizer
@@ -9,6 +10,7 @@ module LLT
 
     include Core::Serviceable
     include Constants::Abbreviations
+    include Helpers::Metrical
 
     uses_db { DbHandler::Prometheus.new }
 
@@ -56,6 +58,7 @@ module LLT
       @merging          = parse_option(:merging, options)
       @shifting         = parse_option(:shifting, options)
       @shift_range = shift_range(@shifting)
+      evaluate_metrical_presence(text)
     end
 
     def parse_option(opt, options)

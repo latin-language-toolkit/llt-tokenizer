@@ -14,7 +14,7 @@ module LLT
 
     def initialize(options)
       super
-      @default_options = parse_default_options(options)
+      set_default_options(options)
     end
 
     DEFAULTS = {
@@ -22,10 +22,10 @@ module LLT
       enclitics_marker: '-'
     }
 
-    def parse_default_options(opts)
+    def set_default_options(opts)
       # do not want to capture any db instance here
       relevant_opts = opts.reject { |k, _| k == :db }
-      DEFAULTS.merge(relevant_opts)
+      @default_options = DEFAULTS.merge(relevant_opts)
     end
 
     def self.tokenize(input)

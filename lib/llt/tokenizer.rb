@@ -16,11 +16,11 @@ module LLT
       new(input).tokenize
     end
 
-    def tokenize(text, add_to: nil)
+    def tokenize(text, options = {}, add_to: nil)
       raise ArgumentError.new("The argument passed must be a String") unless text.is_a?(String)
       return [] if text.empty?
 
-      setup(text)
+      setup(text, options)
 
       create_array_elements
       find_abbreviations_and_join_strings
@@ -32,9 +32,10 @@ module LLT
       tokens
     end
 
-    def setup(text, worker = [])
+    def setup(text, options = {}, worker = [])
       @text = text
       @worker = worker # can be setup for easier testing
+      @enclitics_marker = '-'
     end
 
   ######################
@@ -72,6 +73,7 @@ module LLT
 
     WORDS_ENDING_WITH_QUE = [ /^([qc]u[ei].*que|qu[ao]que|itaque|atque|neque|ut[er].*que|plerumque|denique|undique)$/i ]
     WORDS_ENDING_WITH_NE  = [ /^(omne|sine|bene|paene)$/i ]
+    WORDS_ENDING_WITH_VE  = []
 
     # laetusque  to -que laetus
     # in eoque   to -que in eo
@@ -81,19 +83,23 @@ module LLT
     #
     # uterque, institutione et al. remain
 
+    ENCLITICS = %w{ que ne ve }
     def split_enklitika_and_change_their_position
-      # uses brute force at first
-      split_enklitikon("-que", WORDS_ENDING_WITH_QUE)
-      # the restrictor array handles only obvious cases
-      split_enklitikon("-ne", WORDS_ENDING_WITH_NE)
-
-      # others might be later implemented after the full db_search
+      split_with_force
       make_frequent_corrections
       @worker
     end
 
+    def split_with_force
+      # uses brute force at first
+      # the restrictor arrays handle only obvious cases
+      ENCLITICS.each do |encl|
+        split_enklitikon(encl, self.class.const_get("WORDS_ENDING_WITH_#{encl.upcase}"))
+      end
+    end
+
     def split_enklitikon(word, restrictors, alloweds = [])
-      regexp = /(?<=\w)#{word[1..-1]}$/  # needs a word character in front - ne itself should be contained
+      regexp = /(?<=\w)#{word}$/  # needs a word character in front - ne itself should be contained
 
       indices = []
       @worker.each_with_index do |x,i|
@@ -103,10 +109,17 @@ module LLT
         end
       end
 
-      indices.each { |i| @worker.insert(i, word) }
+      indices.each { |i| @worker.insert(i, enclitic(word)) }
+    end
+
+    def enclitic(val)
+      "#{@enclitics_marker}#{val}"
     end
 
     def make_frequent_corrections
+      # uses db lookups
+      # # TODO 27.11.13 14:15 by LFDM
+      # Implement caching here
       ne_corrections
       que_corrections
     end
@@ -114,8 +127,16 @@ module LLT
     def to_be_shifted_que_indices
       # double shifts would properly fail, but they  might never happen
       @worker.each_with_index.each_with_object([]) do |(element, index), accumulator|
-        accumulator << index if element == "-que" && @worker[index - 1] =~ /^(in|ad|ob)$/ # and others
+        accumulator << index if is_que?(element) && led_by_preposition?(index)
       end
+    end
+
+    def is_que?(element)
+      element == enclitic('que')
+    end
+
+    def led_by_preposition?(index)
+      @worker[index - 1] =~ /^(in|ad|ob)$/ # and others
     end
 
     def que_corrections

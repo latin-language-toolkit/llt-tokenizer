@@ -68,12 +68,12 @@ describe LLT::Tokenizer do
   describe "#find_abbreviations_and_join_strings" do
     describe "should bring back abbreviation dots" do
       it "with names" do
-        tokenizer.setup("", %w{ Atque Sex . et M . Cicero . })
+        tokenizer.setup("", {}, %w{ Atque Sex . et M . Cicero . })
         tokenizer.find_abbreviations_and_join_strings.should == %w{ Atque Sex. et M. Cicero . }
       end
 
       it "with roman date" do
-        tokenizer.setup("", %w{ a . d . V Kal . Apr . })
+        tokenizer.setup("", {}, %w{ a . d . V Kal . Apr . })
         tokenizer.find_abbreviations_and_join_strings.should == %w{ a. d. V Kal. Apr. }
       end
     end
@@ -81,7 +81,7 @@ describe LLT::Tokenizer do
 
   describe "#split_enklitika_and_change_their_position" do
     def enklitika_test(example)
-      tokenizer.setup("", example.split)
+      tokenizer.setup("", {}, example.split)
       tokenizer.split_enklitika_and_change_their_position
     end
 
@@ -154,7 +154,7 @@ describe LLT::Tokenizer do
 
   describe "#merge_what_needs_merging" do
     subject do
-      tokenizer.setup("", self.class.description.split)
+      tokenizer.setup("", {}, self.class.description.split)
       tokenizer.merge_what_needs_merging
     end
 
@@ -164,7 +164,7 @@ describe LLT::Tokenizer do
 
   describe "#create_tokens" do
     def sentence_element_test(example)
-      tokenizer.setup("", example.split)
+      tokenizer.setup("", {}, example.split)
       tokenizer.create_tokens.first
     end
 

@@ -154,7 +154,8 @@ describe LLT::Tokenizer do
 
     context "when confronted with -ve" do
       examples = {
-        'sive' => 'sive'
+        'sive' => 'sive',
+        'pluresve' => '-ve plures',
       }
 
       examples.each do |example, expected|

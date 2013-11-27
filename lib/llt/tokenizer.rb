@@ -73,7 +73,7 @@ module LLT
 
     WORDS_ENDING_WITH_QUE = [ /^([qc]u[ei].*que|qu[ao]que|itaque|atque|neque|ut[er].*que|plerumque|denique|undique)$/i ]
     WORDS_ENDING_WITH_NE  = [ /^(omne|sine|bene|paene)$/i ]
-    WORDS_ENDING_WITH_VE  = []
+    WORDS_ENDING_WITH_VE  = [ /^(sive)$/ ]
 
     # laetusque  to -que laetus
     # in eoque   to -que in eo

@@ -166,14 +166,14 @@ module LLT
       corrections = []
       @worker.each_with_index do |w, i|
         if w == enclitic('ne')
-          next_el = @worker[i + 1]
+          orig_el = original_word(i)
 
           entries = []
-          entries += lookup(next_el, :noun, :nom)           if next_el =~ /io$/   # actio-ne ratio-ne
-          entries += lookup(next_el + "n", :persona, :stem) if next_el =~ /o$/    # Plato-ne Cicero-ne Solo-ne
-          entries += lookup(next_el + "n", :noun, :stem)    if next_el =~ /d?i$/  # fortitudi-ne ratio-ne libidi-ne homi-ne
-          entries += lookup(next_el + "n", :noun, :stem)    if next_el =~ /mi$/   # flumi-ne agmi-ne
-          entries += lookup(next_el + "n", :adjective, :stem)                     # communis commune
+          entries += lookup(orig_el, :noun, :nom)           if orig_el =~ /io$/   # actio-ne ratio-ne
+          entries += lookup(orig_el + "n", :persona, :stem) if orig_el =~ /o$/    # Plato-ne Cicero-ne Solo-ne
+          entries += lookup(orig_el + "n", :noun, :stem)    if orig_el =~ /d?i$/  # fortitudi-ne ratio-ne libidi-ne homi-ne
+          entries += lookup(orig_el + "n", :noun, :stem)    if orig_el =~ /mi$/   # flumi-ne agmi-ne
+          entries += lookup(orig_el + "n", :adjective, :stem)                     # communis commune
 
           if entries.any?(&:third_decl_with_possible_ne_abl?)
             corrections << i - corrections.size
@@ -188,12 +188,12 @@ module LLT
       corrections = []
       @worker.each_with_index do |w, i|
         if w == enclitic('ve')
-          next_el = @worker[i + 1]
+          orig_el = original_word(i)
 
           entries = []
-          entries += lookup(next_el + 'v', :adjective, :stem, 1)
-          entries += lookup(next_el + 'v', :adjective, :stem, 3)
-          entries += lookup(next_el + 'v', :noun,      :stem, [2, 5])
+          entries += lookup(orig_el + 'v', :adjective, :stem, 1)
+          entries += lookup(orig_el + 'v', :adjective, :stem, 3)
+          entries += lookup(orig_el + 'v', :noun,      :stem, [2, 5])
 
           if entries.any?
             corrections << i - corrections.size
@@ -202,6 +202,17 @@ module LLT
       end
 
       reverse_splittings(corrections)
+    end
+
+    def original_word(i)
+      # there are two possible scenarios at this point
+      # with shifting enabled:
+      #         i  i + 1
+      #   arma que virum
+      # with shifting disabled:
+      #        i - 1  i
+      #   arma virum que
+      @worker[i + (@shifting ? 1 : -1)]
     end
 
     def lookup(string, type, column, inflection_class = 3)
@@ -215,9 +226,11 @@ module LLT
 
     def reverse_splittings(indices)
       indices.each do |i|
-        orig_word = @worker[i + 1]
+        # need to retrieve the orig word before the splitted var is
+        # assigned, as it deletes something in the worker
+        ow = original_word(i)
         splitted  = @worker.delete_at(i).delete(@enclitics_marker)
-        orig_word << splitted
+        ow << splitted
       end
     end
 

@@ -213,11 +213,18 @@ describe LLT::Tokenizer do
       end
 
       context "with disabled shifting" do
-        it "can disable shifting" do
+        it "doesn't shift" do
           txt = 'Arma virumque in carmina et in eoque cano.'
           opts = { shifting: false, enclitics_marker: '' }
           tokens = tokenizer.tokenize(txt, opts).map(&:to_s)
           tokens.should == %w{ Arma virum que in carmina et in eo que cano . }
+        end
+
+        it "doesn't shift (complex)" do
+          txt = 'ratione arma virumque cano.'
+          opts = { shifting: false }
+          tokens = tokenizer.tokenize(txt, opts).map(&:to_s)
+          tokens.should == %w{ ratione arma virum -que cano . }
         end
       end
     end

@@ -255,21 +255,20 @@ module LLT
 
   ######################
 
-    MERGE_WORDS = [ %w{ quam diu } ]
+    MERGE_WORDS = [ %w{ quam diu }, ['non', /null.{1, 4}/] ]
 
     # quam diu to quamdiu
-
     def merge_what_needs_merging
       to_delete = []
       @worker.each_overlapping_pair.each_with_index do |pair, i|
-        merge_words(pair, i, to_delete) if is_a_mergable_pair?(pair)
+        merge_words(pair, i, to_delete) if is_a_mergable_pair?(*pair)
       end
       to_delete.each { |i| @worker.delete_at(i) }
       @worker
     end
 
-    def is_a_mergable_pair?(pair)
-      MERGE_WORDS.include?(pair)
+    def is_a_mergable_pair?(x, y)
+      MERGE_WORDS.any? { |a, b| x === a && y == b  }
     end
 
     def merge_words(pair, i, to_delete)

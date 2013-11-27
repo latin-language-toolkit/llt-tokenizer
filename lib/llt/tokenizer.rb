@@ -81,7 +81,7 @@ module LLT
     #
     # but
     #
-    # uterque, institutione et al. remain
+    # uterque, institutione, sive et al. remain
 
     ENCLITICS = %w{ que ne ve }
     def split_enklitika_and_change_their_position
@@ -124,6 +124,12 @@ module LLT
       que_corrections
     end
 
+    def que_corrections
+      to_be_shifted_que_indices.each do |i|
+        @worker.insert(i - 1, @worker.delete_at(i))
+      end
+    end
+
     def to_be_shifted_que_indices
       # double shifts would properly fail, but they  might never happen
       @worker.each_with_index.each_with_object([]) do |(element, index), accumulator|
@@ -139,12 +145,8 @@ module LLT
       @worker[index - 1] =~ /^(in|ad|ob)$/ # and others
     end
 
-    def que_corrections
-      to_be_shifted_que_indices.each { |i| @worker.insert(i - 1, @worker.delete_at(i)) }
-    end
-
     def ne_corrections
-      correct = []
+      corrections = []
       @worker.each_with_index do |w, i|
         if w == "-ne"
           next_el = @worker[i + 1]
@@ -157,12 +159,15 @@ module LLT
           entries += lookup(next_el + "n", :adjective, :stem)                     # communis commune
 
           if entries.any?(&:third_decl_with_possible_ne_abl?)
-            correct << i - correct.size
+            corrections << i - corrections.size
           end
         end
       end
 
-      correct.each { |i| @worker[i + 1] << @worker.delete_at(i)[1..-1] }
+      reverse_splittings(corrections)
+    end
+
+    def ve_corrections
     end
 
     def lookup(string, type, column, inflection_class = 3)
@@ -172,6 +177,14 @@ module LLT
                 restrictions: { type: :inflection_class, values: [inflection_class] }
               }
       @db.look_up_stem(query)
+    end
+
+    def reverse_splittings(indices)
+      indices.each do |i|
+        orig_word = @worker[i + 1]
+        splitted  = @worker.delete_at(i).delete(@enclitics_marker)
+        orig_word << splitted
+      end
     end
 
 

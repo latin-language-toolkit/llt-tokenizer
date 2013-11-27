@@ -7,6 +7,7 @@ require 'llt/helpers/metrical'
 module LLT
   class Tokenizer
     require 'llt/token'
+    require 'llt/tokenizer/worker'
 
     include Core::Serviceable
     include Constants::Abbreviations
@@ -53,7 +54,8 @@ module LLT
 
     def setup(text, options = {}, worker = [])
       @text = text
-      @worker = worker # can be setup for easier testing
+      # can be setup for easier testing
+      @worker = worker.any? ?  Worker.setup(worker) : Worker.new(@text)
       @enclitics_marker = parse_option(:enclitics_marker, options)
       @merging          = parse_option(:merging, options)
       @shifting         = parse_option(:shifting, options)
@@ -75,9 +77,8 @@ module LLT
 
     # "Atque M. Cicero mittit" to %w{ Atque M . Cicero mittit }
 
-    PUNCTUATION = /([\.\?,!;\-:"\(\)\[\]†])/
     def create_array_elements
-      @worker = @text.gsub(PUNCTUATION, ' \1 ').split
+      @worker.create_array_elements
     end
 
   ######################
@@ -99,7 +100,6 @@ module LLT
       end
 
       arr.each { |i| @worker.delete_at(i) }
-      @worker
     end
 
   ######################
@@ -120,7 +120,6 @@ module LLT
     def split_enklitika_and_change_their_position
       split_with_force
       make_frequent_corrections
-      @worker
     end
 
     def split_with_force
@@ -267,7 +266,6 @@ module LLT
         merge_words(pair, i, to_delete) if is_a_mergable_pair?(*pair)
       end
       to_delete.each { |i| @worker.delete_at(i) }
-      @worker
     end
 
     def is_a_mergable_pair?(x, y)
@@ -283,6 +281,7 @@ module LLT
 
     ABBR_NAME_WITH_DOT       = /^(#{NAMES_PIPED})\.$/
     ROMAN_DATE_EXPR_WITH_DOT = /^(#{DATES_PIPED})\.$/
+    PUNCTUATION = /([\.\?,!;\-:"\(\)\[\]†])/
 
     def create_tokens
       @worker.map! do |el|
@@ -293,6 +292,10 @@ module LLT
         else                               Token::Word.new(el)
         end
       end
+    end
+
+    def preliminary
+      @worker.to_a
     end
   end
 end

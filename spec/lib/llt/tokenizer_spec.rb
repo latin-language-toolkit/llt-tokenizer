@@ -73,12 +73,14 @@ describe LLT::Tokenizer do
       describe "should bring back abbreviation dots" do
         it "with names" do
           tokenizer.setup("", {}, %w{ Atque Sex . et M . Cicero . })
-          tokenizer.find_abbreviations_and_join_strings.should == %w{ Atque Sex. et M. Cicero . }
+          tokenizer.find_abbreviations_and_join_strings
+          tokenizer.preliminary.should == %w{ Atque Sex. et M. Cicero . }
         end
 
         it "with roman date" do
           tokenizer.setup("", {}, %w{ a . d . V Kal . Apr . })
-          tokenizer.find_abbreviations_and_join_strings.should == %w{ a. d. V Kal. Apr. }
+          tokenizer.find_abbreviations_and_join_strings
+          tokenizer.preliminary.should == %w{ a. d. V Kal. Apr. }
         end
       end
     end
@@ -87,6 +89,7 @@ describe LLT::Tokenizer do
       def enklitika_test(example)
         tokenizer.setup("", {}, example.split)
         tokenizer.split_enklitika_and_change_their_position
+        tokenizer.preliminary
       end
 
       context "when confronted with -que" do
@@ -175,6 +178,7 @@ describe LLT::Tokenizer do
       subject do
         tokenizer.setup("", {}, self.class.description.split)
         tokenizer.merge_what_needs_merging
+        tokenizer.preliminary
       end
 
       describe("quam diu")    { it { should be_transformed_to "quamdiu" } }

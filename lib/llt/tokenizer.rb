@@ -19,7 +19,8 @@ module LLT
 
     DEFAULTS = {
       shifting: true,
-      enclitics_marker: '-'
+      enclitics_marker: '-',
+      merging: true
     }
 
     def set_default_options(opts)
@@ -41,7 +42,7 @@ module LLT
       create_array_elements
       find_abbreviations_and_join_strings
       split_enklitika_and_change_their_position
-      merge_what_needs_merging # quam diu => quamdiu
+      merge_what_needs_merging if @merging # quam diu => quamdiu
       tokens = create_tokens
 
       add_to << tokens if add_to.respond_to?(:<<)
@@ -52,6 +53,7 @@ module LLT
       @text = text
       @worker = worker # can be setup for easier testing
       @enclitics_marker = parse_option(:enclitics_marker, options)
+      @merging          = parse_option(:merging, options)
       @shifting         = parse_option(:shifting, options)
       @shift_range = shift_range(@shifting)
     end

@@ -227,6 +227,15 @@ describe LLT::Tokenizer do
           tokens.should == %w{ ratione arma virum -que cano . }
         end
       end
+
+      context "with disabled merging" do
+        it "doesn't merge things like quam diu" do
+          txt = 'quam diu cano?'
+          opts = { merging: false }
+          tokens = tokenizer.tokenize(txt, opts).map(&:to_s)
+          tokens.should == %w{ quam diu cano ? }
+        end
+      end
     end
   end
 

@@ -53,22 +53,6 @@ describe LLT::Tokenizer do
       end
     end
 
-    # the following specs could be considered private
-
-    describe "#create_array_elements" do
-      it "should split between punctuation and spaces" do
-        tokenizer.setup(txt)
-        tokenizer.create_array_elements.should == %w{ Atque Sex . et M . Cicero . }
-      end
-
-      describe "when confronted with a roman date expression" do
-        it "should split between punctuation and spaces" do
-          tokenizer.setup(date)
-          tokenizer.create_array_elements.should == %w{ a . d . V Kal . Apr . }
-        end
-      end
-    end
-
     describe "#find_abbreviations_and_join_strings" do
       describe "should bring back abbreviation dots" do
         it "with names" do

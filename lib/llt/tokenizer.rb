@@ -42,7 +42,6 @@ module LLT
 
       setup(text, options)
 
-      create_array_elements
       find_abbreviations_and_join_strings
       split_enklitika_and_change_their_position
       merge_what_needs_merging if @merging # quam diu => quamdiu
@@ -53,14 +52,30 @@ module LLT
     end
 
     def setup(text, options = {}, worker = [])
-      @text = text
-      # can be setup for easier testing
-      @worker = worker.any? ?  Worker.setup(worker) : Worker.new(@text)
+      @text   = text
+      @worker = setup_worker(worker)
       @enclitics_marker = parse_option(:enclitics_marker, options)
       @merging          = parse_option(:merging, options)
       @shifting         = parse_option(:shifting, options)
       @shift_range = shift_range(@shifting)
       evaluate_metrical_presence(text)
+    end
+
+    # This is here for two reasons:
+    #   1) easier test setup, when a preliminary result shall be further evaluated
+    #
+    #   2) more importantly adding a level of indirection, when
+    #      the given text holds metrical information. It adds a
+    #      substitute implementation for the worker array, but only
+    #      if it's needed - which should perform better, when there
+    #      are no metrics involved (the default case)
+    def setup_worker(worker)
+      if worker.any?
+        worker
+      else
+        elements = @text.gsub(PUNCTUATION, ' \1 ').split
+        metrical? ? Worker.new(elements) : elements
+      end
     end
 
     def parse_option(opt, options)
@@ -73,13 +88,6 @@ module LLT
       shifting_enabled ? 0 : 1
     end
 
-  ######################
-
-    # "Atque M. Cicero mittit" to %w{ Atque M . Cicero mittit }
-
-    def create_array_elements
-      @worker.create_array_elements
-    end
 
   ######################
 

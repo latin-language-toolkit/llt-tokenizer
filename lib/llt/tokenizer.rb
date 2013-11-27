@@ -255,7 +255,7 @@ module LLT
 
   ######################
 
-    MERGE_WORDS = [ %w{ quam diu }, ['non', /null.{1, 4}/] ]
+    MERGE_WORDS = [ %w{ quam diu }, ['non', /null.{1,4}$/] ]
 
     # quam diu to quamdiu
     def merge_what_needs_merging
@@ -268,7 +268,7 @@ module LLT
     end
 
     def is_a_mergable_pair?(x, y)
-      MERGE_WORDS.any? { |a, b| x === a && y == b  }
+      MERGE_WORDS.any? { |a, b| a === x && b === y  }
     end
 
     def merge_words(pair, i, to_delete)

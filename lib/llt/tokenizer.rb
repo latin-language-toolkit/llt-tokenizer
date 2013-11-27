@@ -261,19 +261,20 @@ module LLT
 
     def merge_what_needs_merging
       to_delete = []
-      @worker.each_overlapping_pair do |pair|
-        merge_words(pair, to_delete) if is_a_mergable_pair?(pair)
+      @worker.each_overlapping_pair.each_with_index do |pair, i|
+        merge_words(pair, i, to_delete) if is_a_mergable_pair?(pair)
       end
-      @worker -= to_delete
+      to_delete.each { |i| @worker.delete_at(i) }
+      @worker
     end
 
     def is_a_mergable_pair?(pair)
       MERGE_WORDS.include?(pair)
     end
 
-    def merge_words(pair, to_delete)
+    def merge_words(pair, i, to_delete)
       pair.first << pair.last
-      to_delete  << pair.last
+      to_delete  << (i + 1 - to_delete.size)
     end
 
   ######################

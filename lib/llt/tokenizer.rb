@@ -16,7 +16,7 @@ module LLT
       new(input).tokenize
     end
 
-    def tokenize(text, options = {}, add_to: nil)
+    def tokenize(text, add_to: nil, **options)
       raise ArgumentError.new("The argument passed must be a String") unless text.is_a?(String)
       return [] if text.empty?
 
@@ -35,7 +35,19 @@ module LLT
     def setup(text, options = {}, worker = [])
       @text = text
       @worker = worker # can be setup for easier testing
-      @enclitics_marker = '-'
+      @enclitics_marker = options[:enclitics_marker] || '-'
+      @shifting = shift_decision(options[:shifting])
+      @shift_range = shift_range(@shifting)
+    end
+
+    def shift_decision(option)
+      # we cannot just do option || true, because option might
+      # be a totally legitimate false
+      option.nil? ? true : option
+    end
+
+    def shift_range(shifting_enabled)
+      shifting_enabled ? 0 : 1
     end
 
   ######################
@@ -105,7 +117,7 @@ module LLT
       @worker.each_with_index do |x,i|
         if x.match(regexp) && restrictors.none? { |y| y.match(x) }
           x.slice!(regexp)
-          indices << i + indices.size
+          indices << (i + indices.size + @shift_range)
         end
       end
 
@@ -126,8 +138,12 @@ module LLT
     end
 
     def que_corrections
-      to_be_shifted_que_indices.each do |i|
-        @worker.insert(i - 1, @worker.delete_at(i))
+      # this is used in rare only in cases like in eoque
+      # which needs a shift to -que in eo
+      if @shifting
+        to_be_shifted_que_indices.each do |i|
+          @worker.insert(i - 1, @worker.delete_at(i))
+        end
       end
     end
 

@@ -99,9 +99,9 @@ module LLT
 
   ######################
 
-    WORDS_ENDING_WITH_QUE = [ /^([qc]u[ei].*que|qu[ao]que|itaque|atque|neque|ut[er].*que|plerumque|denique|undique)$/i ]
-    WORDS_ENDING_WITH_NE  = [ /^(omne|sine|bene|paene)$/i ]
-    WORDS_ENDING_WITH_VE  = [ /^(sive)$/ ]
+    WORDS_ENDING_WITH_QUE = /^([qc]u[ei].*que|qu[ao]que|itaque|atque|neque|ut[er].*que|plerumque|denique|undique)$/i
+    WORDS_ENDING_WITH_NE  = /^(omne|sine|bene|paene)$/i
+    WORDS_ENDING_WITH_VE  = /^(sive)$/i
 
     # laetusque  to -que laetus
     # in eoque   to -que in eo
@@ -120,24 +120,24 @@ module LLT
 
     def split_with_force
       # uses brute force at first
-      # the restrictor arrays handle only obvious cases
+      # the restrictor regexps handle only obvious cases
       ENCLITICS.each do |encl|
         split_enklitikon(encl, self.class.const_get("WORDS_ENDING_WITH_#{encl.upcase}"))
       end
     end
 
-    def split_enklitikon(word, restrictors, alloweds = [])
-      regexp = /(?<=\w)#{word}$/  # needs a word character in front - ne itself should be contained
+    def split_enklitikon(encl, restrictors)
+      regexp = /(?<=\w)#{encl}$/  # needs a word character in front - ne itself should be contained
 
       indices = []
-      @worker.each_with_index do |x,i|
-        if x.match(regexp) && restrictors.none? { |y| y.match(x) }
-          x.slice!(regexp)
+      @worker.each_with_index do |token, i|
+        if token.match(regexp) && restrictors !~ token
+          token.slice!(regexp)
           indices << (i + indices.size + @shift_range)
         end
       end
 
-      indices.each { |i| @worker.insert(i, enclitic(word)) }
+      indices.each { |i| @worker.insert(i, enclitic(encl)) }
     end
 
     def enclitic(val)

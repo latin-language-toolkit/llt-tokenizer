@@ -1,6 +1,6 @@
-require 'array_scanner'
 require 'llt/core'
 require 'llt/constants/abbreviations'
+require 'llt/core_extensions/array'
 require 'llt/db_handler/prometheus'
 
 module LLT
@@ -261,20 +261,19 @@ module LLT
 
     def merge_what_needs_merging
       to_delete = []
-      arr = ArrayScanner.new(@worker)
-
-      until arr.eoa?
-        arr.scan
-        pair = [arr.last_result.downcase, arr.current]
-        merge_words(arr, to_delete) if MERGE_WORDS.include?(pair)
+      @worker.each_overlapping_pair do |pair|
+        merge_words(pair, to_delete) if is_a_mergable_pair?(pair)
       end
-
       @worker -= to_delete
     end
 
-    def merge_words(arr, to_delete)
-      arr.last_result << arr.current_element
-      to_delete       << arr.current_element
+    def is_a_mergable_pair?(pair)
+      MERGE_WORDS.include?(pair)
+    end
+
+    def merge_words(pair, to_delete)
+      pair.first << pair.last
+      to_delete  << pair.last
     end
 
   ######################

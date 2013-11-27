@@ -12,7 +12,7 @@ module LLT
 
     uses_db { DbHandler::Prometheus.new }
 
-    def initialize(options)
+    def initialize(options = {})
       super
       set_default_options(options)
     end

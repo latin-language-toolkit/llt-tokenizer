@@ -90,24 +90,25 @@ describe LLT::Tokenizer do
     context "when confronted with -que" do
       # even if should_not be splitted would be more expressive,
       # use only positive expectation as it gives more detailed feedback
-      examples = { "laetusque" => "-que laetus",
-                   "in eoque"  => "-que in eo",
-                   "ad eamque" => "-que ad eam",
-                   "ob easque" => "-que ob eas",
-                   "Atque"     => "Atque",
-                   "atque"     => "atque",
-                   "cuiusque"  => "cuiusque",
-                   "denique"   => "denique",
-                   "itaque"    => "itaque",
-                   "neque"     => "neque",
-                   "plerumque" => "plerumque",
-                   "quaque"    => "quaque",
-                   "quemque"   => "quemque",
-                   "undique"   => "undique",
-                   "uterque"   => "uterque",
-                   "utriusque" => "utriusque",
-                   "bonus laetusque et latus altusque" => "bonus -que laetus et latus -que altus",
-                 }
+      examples = {
+        "laetusque" => "-que laetus",
+        "in eoque"  => "-que in eo",
+        "ad eamque" => "-que ad eam",
+        "ob easque" => "-que ob eas",
+        "Atque"     => "Atque",
+        "atque"     => "atque",
+        "cuiusque"  => "cuiusque",
+        "denique"   => "denique",
+        "itaque"    => "itaque",
+        "neque"     => "neque",
+        "plerumque" => "plerumque",
+        "quaque"    => "quaque",
+        "quemque"   => "quemque",
+        "undique"   => "undique",
+        "uterque"   => "uterque",
+        "utriusque" => "utriusque",
+        "bonus laetusque et latus altusque" => "bonus -que laetus et latus -que altus",
+      }
 
       examples.each do |example, expected|
         it "transforms #{example} to #{expected}" do
@@ -117,32 +118,32 @@ describe LLT::Tokenizer do
     end
 
     context "when confronted with -ne" do
-      examples = { "honestumne" => "-ne honestum",
-                   "omniane"    => "-ne omnia",
+      examples = {
+        "honestumne" => "-ne honestum",
+        "omniane"    => "-ne omnia",
 
-                   # frequent patterns in third declension nouns
-                   "ratione"      => "ratione",
-                   "magnitudine"  => "magnitudine",
-                   "Platone"      => "Platone",
-                   "libidine"     => "libidine",
-                   "Solone"       => "Solone",
-                   "homine"       => "homine",
-                   "flumine"      => "flumine",
+        # frequent patterns in third declension nouns
+        "ratione"      => "ratione",
+        "magnitudine"  => "magnitudine",
+        "Platone"      => "Platone",
+        "libidine"     => "libidine",
+        "Solone"       => "Solone",
+        "homine"       => "homine",
+        "flumine"      => "flumine",
 
-                   # frequent patterns in third declension adjective
-                   "commune"    => "commune",
-                   "Commune"    => "Commune",
+        # frequent patterns in third declension adjective
+        "commune"    => "commune",
+        "Commune"    => "Commune",
 
-                   # filtered by restrictor array
-                   "omne"       => "omne",
-                   "sine"       => "sine",
-                   "bene"       => "bene",
-                   "paene"      => "paene",
+        # filtered by restrictor array
+        "omne"       => "omne",
+        "sine"       => "sine",
+        "bene"       => "bene",
+        "paene"      => "paene",
 
-                   # ne itself should be contained
-                   "ne"         => "ne",
-
-                 }
+        # ne itself should be contained
+        "ne"         => "ne",
+      }
 
       examples.each do |example, expected|
         it "transforms #{example} to #{expected}" do

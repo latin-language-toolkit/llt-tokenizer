@@ -215,9 +215,9 @@ describe LLT::Tokenizer do
       context "with disabled shifting" do
         it "doesn't shift" do
           txt = 'Arma virumque in carmina et in eoque cano.'
-          opts = { shifting: false, enclitics_marker: '' }
+          opts = { shifting: false }
           tokens = tokenizer.tokenize(txt, opts).map(&:to_s)
-          tokens.should == %w{ Arma virum que in carmina et in eo que cano . }
+          tokens.should == %w{ Arma virum -que in carmina et in eo -que cano . }
         end
 
         it "doesn't shift (complex)" do
@@ -227,6 +227,16 @@ describe LLT::Tokenizer do
           tokens.should == %w{ ratione arma virum -que cano . }
         end
       end
+    end
+  end
+
+  context "with options on instance creation" do
+    it "a new instance can receive options, which it will use as it's defaults" do
+      custom_tok = LLT::Tokenizer.new(db: stub_db,
+                                      shifting: false,
+                                      enclitics_marker: '')
+      tokens = custom_tok.tokenize('Arma virumque cano.').map(&:to_s)
+      tokens.should == %w{ Arma virum que cano . }
     end
   end
 end

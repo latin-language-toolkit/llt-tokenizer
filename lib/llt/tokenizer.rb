@@ -12,6 +12,22 @@ module LLT
 
     uses_db { DbHandler::Prometheus.new }
 
+    def initialize(options)
+      super
+      @default_options = parse_default_options(options)
+    end
+
+    DEFAULTS = {
+      shifting: true,
+      enclitics_marker: '-'
+    }
+
+    def parse_default_options(opts)
+      # do not want to capture any db instance here
+      relevant_opts = opts.reject { |k, _| k == :db }
+      DEFAULTS.merge(relevant_opts)
+    end
+
     def self.tokenize(input)
       new(input).tokenize
     end
@@ -35,15 +51,15 @@ module LLT
     def setup(text, options = {}, worker = [])
       @text = text
       @worker = worker # can be setup for easier testing
-      @enclitics_marker = options[:enclitics_marker] || '-'
-      @shifting = shift_decision(options[:shifting])
+      @enclitics_marker = parse_option(:enclitics_marker, options)
+      @shifting         = parse_option(:shifting, options)
       @shift_range = shift_range(@shifting)
     end
 
-    def shift_decision(option)
-      # we cannot just do option || true, because option might
+    def parse_option(opt, options)
+      # we cannot just do option || true, because some options might
       # be a totally legitimate false
-      option.nil? ? true : option
+      (option = options[opt]).nil? ? @default_options[opt] : option
     end
 
     def shift_range(shifting_enabled)

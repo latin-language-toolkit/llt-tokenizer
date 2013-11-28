@@ -50,6 +50,12 @@ describe LLT::Tokenizer do
         it "raises an error if argument is not a string" do
           expect { tokenizer.tokenize([]) }.to raise_error ArgumentError
         end
+
+        it "handles quantified text", :focus do
+          txt = 'M. Cicero pecūniam gaudĭămquĕ incolīs dabit.'
+          tokens = tokenizer.tokenize(txt, shifting: false).map(&:to_s)
+          tokens.should == %w{ M. Cicero pecūniam gaudĭăm -quĕ incolīs dabit . }
+        end
       end
     end
 

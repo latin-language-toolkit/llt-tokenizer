@@ -53,12 +53,12 @@ module LLT
 
     def setup(text, options = {}, worker = [])
       @text   = text
-      @worker = setup_worker(worker)
+      evaluate_metrical_presence(@text)
       @enclitics_marker = parse_option(:enclitics_marker, options)
       @merging          = parse_option(:merging, options)
       @shifting         = parse_option(:shifting, options)
+      @worker = setup_worker(worker)
       @shift_range = shift_range(@shifting)
-      evaluate_metrical_presence(text)
     end
 
     # This is here for two reasons:
@@ -74,8 +74,16 @@ module LLT
         worker
       else
         elements = @text.gsub(PUNCTUATION, ' \1 ').split
-        metrical? ? Worker.new(elements) : elements
+        if metrical?
+          Worker.new(elements, all_enclitics, @shifting, @enclitics_marker)
+        else
+          elements
+        end
       end
+    end
+
+    def all_enclitics
+      ENCLITICS.map { |encl| enclitic(encl) }
     end
 
     def parse_option(opt, options)
@@ -292,7 +300,8 @@ module LLT
     PUNCTUATION = /([\.\?,!;\-:"\(\)\[\]†])/
 
     def create_tokens
-      @worker.map! do |el|
+      # call #to_a is to retrieve optional metrical data
+      @worker.to_a.map! do |el|
         case el
         when ABBR_NAME_WITH_DOT       then Token::Filler.new(el)
         when ROMAN_DATE_EXPR_WITH_DOT then Token::Filler.new(el)

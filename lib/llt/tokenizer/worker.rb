@@ -29,14 +29,12 @@ module LLT
 
       # One ugly method, but we don't want to slow it down even more
       def align_metrical_text
-        aligned = []
         m = ArrayScanner.new(@metrical_text)
         b = ArrayScanner.new(@bare_text)
         loop do
           x = m.scan
           y = b.scan
           no_meter = wo_meter(x)
-
           unless no_meter == y
             if @enclitics.include?(y)
               # metrical text will have the encl y at its current position and
@@ -46,19 +44,28 @@ module LLT
                 x = m.current
                 index = wo_meter(x) =~ clean_encl_re
               end
-              encl_w_meter = x.slice!(index..-1)
-              m.to_a.insert(m.pos - 1, "#{@marker}#{encl_w_meter}")
+              insert!(slice_encl!(x, index), m.pos - 1)
             elsif encl = @unmarked_encl.find { |e| no_meter.end_with?(e) }
               index = no_meter =~ /#{encl}$/
-              encl_w_meter = x.slice!(index..-1)
-              m.to_a.insert(m.pos, "#{@marker}#{encl_w_meter}")
+              insert!(slice_encl!(x, index), m.pos)
             elsif y.end_with?('.') && m.current == '.'
-              x << m.to_a.delete_at(m.pos)
+              append_from_index!(x, m.pos)
             end
           end
-          aligned << x
           break if b.eoa?
         end
+      end
+
+      def insert!(enclitic, position)
+        @metrical_text.insert(position, "#{@marker}#{enclitic}")
+      end
+
+      def slice_encl!(token, index)
+        token.slice!(index..-1)
+      end
+
+      def append_from_index!(token, index)
+        token << @metrical_text.delete_at(index)
       end
     end
   end

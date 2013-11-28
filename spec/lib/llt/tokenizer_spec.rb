@@ -51,16 +51,22 @@ describe LLT::Tokenizer do
           expect { tokenizer.tokenize([]) }.to raise_error ArgumentError
         end
 
-        it "handles quantified text (unshifted)", :focus do
+        it "handles quantified text (unshifted)" do
           txt = 'M. Cicero pecūniam gaudĭămquĕ incolīs dabit.'
           tokens = tokenizer.tokenize(txt, shifting: false).map(&:to_s)
           tokens.should == %w{ M. Cicero pecūniam gaudĭăm -quĕ incolīs dabit . }
         end
 
-        it "handles quantified text (shifted)", :focus do
+        it "handles quantified text (shifted)" do
           txt = 'M. Cicero pecūniam gaudĭămquĕ incolīs dabit.'
           tokens = tokenizer.tokenize(txt, shifting: true).map(&:to_s)
           tokens.should == %w{ M. Cicero pecūniam -quĕ gaudĭăm incolīs dabit . }
+        end
+
+        it "handles quantified text (double-shifted)" do
+          txt = 'M. Cicero pecūniam Italia in eoquĕ dabit.'
+          tokens = tokenizer.tokenize(txt, shifting: true).map(&:to_s)
+          tokens.should == %w{ M. Cicero pecūniam Italia -quĕ in eo dabit . }
         end
       end
     end

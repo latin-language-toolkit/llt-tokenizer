@@ -42,7 +42,11 @@ module LLT
           elsif @enclitics.include?(y)
             # metrical text will have the encl y at its current position and
             # in rare cases on the position right after
-            index = no_meter =~ /#{y.dup.delete(@marker)}$/
+            clean_encl_re = /#{y.dup.delete(@marker)}$/
+            unless index = no_meter =~ clean_encl_re
+              x = m.current
+              index = wo_meter(x) =~ clean_encl_re
+            end
             encl_w_meter = x.slice!(index..-1)
             m.to_a.insert(m.pos - 1, "#{@marker}#{encl_w_meter}")
             aligned << x

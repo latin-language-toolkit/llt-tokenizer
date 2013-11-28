@@ -296,7 +296,7 @@ module LLT
     PUNCTUATION = /([\.\?,!;\-:"\(\)\[\]†])/
 
     def create_tokens
-      # call #to_a is to retrieve optional metrical data
+      # call #to_a is to retrieve (and align) optional metrical data
       @worker.to_a.map! do |el|
         case el
         when ABBR_NAME_WITH_DOT       then Token::Filler.new(el)

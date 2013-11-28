@@ -9,7 +9,10 @@ module LLT
       include Helpers::Metrical
 
       def_delegators :@bare_text, :each, :[], :[]=, :insert, :delete_at, :each_overlapping_pair,
-                            :map!
+
+      # TODO 28.11.13 11:45 by LFDM
+      # Edge cases?
+      # Merge words?
 
       def initialize(metric_text, marker)
         @metric_text = metric_text

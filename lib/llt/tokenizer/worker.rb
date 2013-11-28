@@ -37,28 +37,26 @@ module LLT
           y = b.scan
           no_meter = wo_meter(x)
 
-          if no_meter == y
-            aligned << x
-          elsif @enclitics.include?(y)
-            # metrical text will have the encl y at its current position and
-            # in rare cases on the position right after
-            clean_encl_re = /#{y.dup.delete(@marker)}$/
-            unless index = no_meter =~ clean_encl_re
-              x = m.current
-              index = wo_meter(x) =~ clean_encl_re
+          unless no_meter == y
+            if @enclitics.include?(y)
+              # metrical text will have the encl y at its current position and
+              # in rare cases on the position right after
+              clean_encl_re = /#{y.dup.delete(@marker)}$/
+              unless index = no_meter =~ clean_encl_re
+                x = m.current
+                index = wo_meter(x) =~ clean_encl_re
+              end
+              encl_w_meter = x.slice!(index..-1)
+              m.to_a.insert(m.pos - 1, "#{@marker}#{encl_w_meter}")
+            elsif encl = @unmarked_encl.find { |e| no_meter.end_with?(e) }
+              index = no_meter =~ /#{encl}$/
+              encl_w_meter = x.slice!(index..-1)
+              m.to_a.insert(m.pos, "#{@marker}#{encl_w_meter}")
+            elsif y.end_with?('.') && m.current == '.'
+              x << m.to_a.delete_at(m.pos)
             end
-            encl_w_meter = x.slice!(index..-1)
-            m.to_a.insert(m.pos - 1, "#{@marker}#{encl_w_meter}")
-            aligned << x
-          elsif encl = @unmarked_encl.find { |e| no_meter.end_with?(e) }
-            index = no_meter =~ /#{encl}$/
-            encl_w_meter = x.slice!(index..-1)
-            m.to_a.insert(m.pos, "#{@marker}#{encl_w_meter}")
-            aligned << x
-          elsif y.end_with?('.') && m.current == '.'
-            x << m.to_a.delete_at(m.pos)
-            aligned << x
           end
+          aligned << x
           break if b.eoa?
         end
       end

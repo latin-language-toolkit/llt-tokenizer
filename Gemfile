@@ -22,3 +22,5 @@ end
 platform :jruby do
   gem 'activerecord-jdbcpostgresql-adapter'
 end
+
+gem 'pry'

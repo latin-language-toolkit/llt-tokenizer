@@ -75,15 +75,11 @@ module LLT
       else
         elements = @text.gsub(PUNCTUATION, ' \1 ').split
         if metrical?
-          Worker.new(elements, all_enclitics, @shifting, @enclitics_marker)
+          Worker.new(elements, @enclitics_marker)
         else
           elements
         end
       end
-    end
-
-    def all_enclitics
-      ENCLITICS.map { |encl| enclitic(encl) }
     end
 
     def parse_option(opt, options)

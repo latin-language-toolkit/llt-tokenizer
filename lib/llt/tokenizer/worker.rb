@@ -40,7 +40,12 @@ module LLT
           if no_meter == y
             aligned << x
           elsif @enclitics.include?(y)
-            require 'pry'; binding.pry
+            # metrical text will have the encl y at its current position and
+            # in rare cases on the position right after
+            index = no_meter =~ /#{y.dup.delete(@marker)}$/
+            encl_w_meter = x.slice!(index..-1)
+            m.to_a.insert(m.pos - 1, "#{@marker}#{encl_w_meter}")
+            aligned << x
           elsif encl = @unmarked_encl.find { |e| no_meter.end_with?(e) }
             index = no_meter =~ /#{encl}$/
             encl_w_meter = x.slice!(index..-1)

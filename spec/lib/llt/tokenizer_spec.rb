@@ -52,30 +52,71 @@ describe LLT::Tokenizer do
         end
 
         context "with quantified text" do
+          it "handles unshifted" do
+            txt = 'M. Cicero pecūniam gaudĭămquĕ incolīs dabit.'
+            tokens = tokenizer.tokenize(txt, shifting: false).map(&:to_s)
+            tokens.should == %w{ M. Cicero pecūniam gaudĭăm -quĕ incolīs dabit . }
+          end
 
-        end
-        it "handles unshifted" do
-          txt = 'M. Cicero pecūniam gaudĭămquĕ incolīs dabit.'
-          tokens = tokenizer.tokenize(txt, shifting: false).map(&:to_s)
-          tokens.should == %w{ M. Cicero pecūniam gaudĭăm -quĕ incolīs dabit . }
+          it "handles shifted" do
+            txt = 'M. Cicero pecūniam gaudĭămquĕ incolīs dabit.'
+            tokens = tokenizer.tokenize(txt, shifting: true).map(&:to_s)
+            tokens.should == %w{ M. Cicero pecūniam -quĕ gaudĭăm incolīs dabit . }
+          end
+
+          it "handles double-shifted" do
+            txt = 'M. Cicero pecūniam Italia in eoquĕ dabit.'
+            tokens = tokenizer.tokenize(txt, shifting: true).map(&:to_s)
+            tokens.should == %w{ M. Cicero pecūniam Italia -quĕ in eo dabit . }
+          end
+
+          it "handles merging" do
+            txt = 'Quăm diu M. Cicero pecūniam Italia dabit.'
+            tokens = tokenizer.tokenize(txt, shifting: true).map(&:to_s)
+            tokens.should == %w{ Quămdiu M. Cicero pecūniam Italia dabit . }
+          end
         end
 
-        it "handles shifted" do
-          txt = 'M. Cicero pecūniam gaudĭămquĕ incolīs dabit.'
-          tokens = tokenizer.tokenize(txt, shifting: true).map(&:to_s)
-          tokens.should == %w{ M. Cicero pecūniam -quĕ gaudĭăm incolīs dabit . }
+        context "with more exotic punctuation" do
+          it "handles -- as single Punctuation token" do
+            txt = 'Arma -- virum -- cano.'
+            tokens = tokenizer.tokenize(txt)
+            tokens.should have(6).items
+          end
+
+          it "handles ?! as two separate tokens" do
+            txt = 'Arma cano!?'
+            tokens = tokenizer.tokenize(txt)
+            tokens.should have(4).items
+          end
+
+          context "handles direct speech delimiters" do
+            it "'" do
+              txt = "'Arma', inquit 'cano'."
+              tokens = tokenizer.tokenize(txt)
+              tokens.should have(9).items
+            end
+
+            it '"' do
+              txt = '"Arma" inquit "cano".'
+              tokens = tokenizer.tokenize(txt)
+              tokens.should have(8).items
+            end
+
+            it '”' do
+              txt = '”Arma” inquit ”cano”.'
+              tokens = tokenizer.tokenize(txt)
+              tokens.should have(8).items
+            end
+          end
         end
 
-        it "handles double-shifted" do
-          txt = 'M. Cicero pecūniam Italia in eoquĕ dabit.'
-          tokens = tokenizer.tokenize(txt, shifting: true).map(&:to_s)
-          tokens.should == %w{ M. Cicero pecūniam Italia -quĕ in eo dabit . }
-        end
-
-        it "handles merging" do
-          txt = 'Quăm diu M. Cicero pecūniam Italia dabit.'
-          tokens = tokenizer.tokenize(txt, shifting: true).map(&:to_s)
-          tokens.should == %w{ Quămdiu M. Cicero pecūniam Italia dabit . }
+        context "with embedded xml tags" do
+          it "doesn't break" do
+            txt = '<grc>text text</grc>'
+            tokens = tokenizer.tokenize(txt)
+            tokens.should have(4).items
+          end
         end
       end
     end
@@ -204,9 +245,12 @@ describe LLT::Tokenizer do
         tokenizer.create_tokens.first
       end
 
-      examples = { "Word"     => %w{ ita Marcus quoque -que },
-                   "Filler"   => %w{ M. Sex. App. Ap. Tib. Ti. C. a. d. Kal. Ian. }, #I XI MMC }
-                   "Punctuation" => %w{ , . ! ? † ( ) [ ] } }
+      examples = {
+        "Word"     => %w{ ita Marcus quoque -que },
+        "Filler"   => %w{ M. Sex. App. Ap. Tib. Ti. C. a. d. Kal. Ian. }, #I XI MMC }
+        "XmlTag"   => %w{ <grc> </grc> },
+        "Punctuation" => %w{ , . ! ? † ( ) [ ] ... -- ” " ' }
+      }
 
       examples.each do |klass, elements|
         elements.each do |e|
@@ -215,6 +259,24 @@ describe LLT::Tokenizer do
           end
         end
       end
+    end
+
+    it "attaches id's to tokens" do
+      txt = 'Cano.'
+      tokens = tokenizer.tokenize(txt)
+      tokens.map(&:id).should == [1, 2]
+    end
+
+    it "can be disabled" do
+      txt = 'Cano.'
+      tokens = tokenizer.tokenize(txt, indexing: false)
+      tokens.map(&:id).should == [nil, nil]
+    end
+
+    it "doesn't count plain xml tags" do
+      txt = '<grc>text text</grc>'
+      tokens = tokenizer.tokenize(txt)
+      tokens.map(&:id).should == [nil, 1, 2, nil]
     end
   end
 

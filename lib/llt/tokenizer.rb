@@ -17,25 +17,13 @@ module LLT
 
     attr_reader :default_options
 
-    def initialize(options = {})
-      super
-      set_default_options(options)
-    end
-
-    DEFAULTS = {
-      shifting: true,
-      enclitics_marker: '-',
-      merging: true
-    }
-
-    def set_default_options(opts)
-      # do not want to capture any db instance here
-      relevant_opts = opts.reject { |k, _| k == :db }
-      @default_options = DEFAULTS.merge(relevant_opts)
-    end
-
-    def self.tokenize(input)
-      new(input).tokenize
+    def self.default_options
+      {
+        shifting: true,
+        enclitics_marker: '-',
+        merging: true,
+        indexing: true,
+      }
     end
 
     def tokenize(text, add_to: nil, **options)
@@ -59,11 +47,12 @@ module LLT
       @enclitics_marker = parse_option(:enclitics_marker, options)
       @merging          = parse_option(:merging, options)
       @shifting         = parse_option(:shifting, options)
+      @indexing         = parse_option(:indexing, options)
       @worker = setup_worker(worker)
       @shift_range = shift_range(@shifting)
     end
 
-    PUNCTUATION = /([\.\?,!;\-:"\(\)\[\]†])/
+    PUNCTUATION = /([\.\?,!;\-:"'”\(\)\[\]†]|<\/?.+?>)\1*/
 
     # This is here for two reasons:
     #   1) easier test setup, when a preliminary result shall be further evaluated
@@ -77,19 +66,13 @@ module LLT
       if worker.any?
         worker
       else
-        elements = @text.gsub(PUNCTUATION, ' \1 ').split
+        elements = @text.gsub(PUNCTUATION, ' \0 ').split
         if metrical?
           Worker.new(elements, @enclitics_marker)
         else
           elements
         end
       end
-    end
-
-    def parse_option(opt, options)
-      # we cannot just do option || true, because some options might
-      # be a totally legitimate false
-      (option = options[opt]).nil? ? @default_options[opt] : option
     end
 
     def shift_range(shifting_enabled)
@@ -300,16 +283,33 @@ module LLT
     ABBR_NAME_WITH_DOT       = /^(#{NAMES_PIPED})\.$/
     ROMAN_DATE_EXPR_WITH_DOT = /^(#{DATES_PIPED})\.$/
     PUNCT_ITSELF             = Regexp.new(PUNCTUATION.source + '$')
+    XML_TAG                  = /<\/?.+?>/
 
     def create_tokens
       # call #to_a is to retrieve (and align) optional metrical data
+      reset_id
       @worker.to_a.map! do |el|
         case el
-        when ABBR_NAME_WITH_DOT       then Token::Filler.new(el)
-        when ROMAN_DATE_EXPR_WITH_DOT then Token::Filler.new(el)
-        when PUNCT_ITSELF             then Token::Punctuation.new(el)
-        else                               Token::Word.new(el)
+        when XML_TAG                  then Token::XmlTag.new(el)
+        when ABBR_NAME_WITH_DOT       then raise_id and Token::Filler.new(el, @id)
+        when ROMAN_DATE_EXPR_WITH_DOT then raise_id and Token::Filler.new(el, @id)
+        when PUNCT_ITSELF             then raise_id and Token::Punctuation.new(el, @id)
+        else                               raise_id and Token::Word.new(el, @id)
         end
+      end
+    end
+
+    def reset_id
+      @id = (@indexing ? @id = 0 : nil)
+    end
+
+    def raise_id
+      if @indexing
+        @id += 1
+      else
+        # need to return true because this is used as first part
+        # of an and construction
+        true
       end
     end
 

@@ -216,6 +216,8 @@ describe LLT::Tokenizer do
           'aestive'  => 'aestive',
           'serve'    => 'serve',
           'suave'    => 'suave',
+          'vive'     => 'vive',
+          'move'     => 'move'
         }
 
         examples.each do |example, expected|

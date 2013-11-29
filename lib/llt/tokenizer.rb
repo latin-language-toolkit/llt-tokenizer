@@ -15,6 +15,8 @@ module LLT
 
     uses_db { DbHandler::Prometheus.new }
 
+    attr_reader :default_options
+
     def initialize(options = {})
       super
       set_default_options(options)

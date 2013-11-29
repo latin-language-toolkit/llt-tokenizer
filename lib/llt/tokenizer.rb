@@ -26,10 +26,6 @@ module LLT
       }
     end
 
-    def self.tokenize(input)
-      new(input).tokenize
-    end
-
     def tokenize(text, add_to: nil, **options)
       raise ArgumentError.new("The argument passed must be a String") unless text.is_a?(String)
       return [] if text.empty?

@@ -1,7 +1,7 @@
 module LLT
   class Token
     class Punctuation < Token
-      xml_tag 'p'
+      xml_tag 'pc'
 
       attr_accessor :opening, :closing, :other
 

@@ -83,6 +83,32 @@ describe LLT::Tokenizer do
             tokens = tokenizer.tokenize(txt)
             tokens.should have(6).items
           end
+
+          it "handles ?! as two separate tokens" do
+            txt = 'Arma cano!?'
+            tokens = tokenizer.tokenize(txt)
+            tokens.should have(4).items
+          end
+
+          context "handles direct speech delimiters" do
+            it "'" do
+              txt = "'Arma' inquit 'cano'."
+              tokens = tokenizer.tokenize(txt)
+              tokens.should have(8).items
+            end
+
+            it '"' do
+              txt = '"Arma" inquit "cano".'
+              tokens = tokenizer.tokenize(txt)
+              tokens.should have(8).items
+            end
+
+            it '”' do
+              txt = '”Arma” inquit ”cano”.'
+              tokens = tokenizer.tokenize(txt)
+              tokens.should have(8).items
+            end
+          end
         end
       end
     end
@@ -213,7 +239,7 @@ describe LLT::Tokenizer do
 
       examples = { "Word"     => %w{ ita Marcus quoque -que },
                    "Filler"   => %w{ M. Sex. App. Ap. Tib. Ti. C. a. d. Kal. Ian. }, #I XI MMC }
-                   "Punctuation" => %w{ , . ! ? † ( ) [ ] .. -- } }
+                   "Punctuation" => %w{ , . ! ? † ( ) [ ] ... -- ” " ' } }
 
       examples.each do |klass, elements|
         elements.each do |e|

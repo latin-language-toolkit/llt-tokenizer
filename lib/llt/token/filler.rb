@@ -1,6 +1,8 @@
 module LLT
   class Token
     class Filler < Token
+      xml_tag 'w'
+
       def add(type)
         case type
         when :name then add_name_form

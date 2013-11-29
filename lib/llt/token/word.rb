@@ -1,6 +1,8 @@
 module LLT
   class Token
     class Word < Token
+      xml_tag 'w'
+
       def word
         @string
       end

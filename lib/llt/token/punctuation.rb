@@ -5,7 +5,7 @@ module LLT
 
       attr_accessor :opening, :closing, :other
 
-      def initialize(string)
+      def initialize(string, id = nil)
         super
         # this is part of an old interface that is mostly unused
         # some parts remain - find and delete em

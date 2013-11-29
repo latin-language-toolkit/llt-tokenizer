@@ -1,7 +1,6 @@
 module LLT
   class Token
     class XmlTag < Token
-
       def set_functions
         [:xml_tag]
       end
@@ -12,5 +11,4 @@ module LLT
       end
     end
   end
-
 end

@@ -25,7 +25,8 @@ module LLT
     DEFAULTS = {
       shifting: true,
       enclitics_marker: '-',
-      merging: true
+      merging: true,
+      indexing: true,
     }
 
     def set_default_options(opts)
@@ -59,6 +60,7 @@ module LLT
       @enclitics_marker = parse_option(:enclitics_marker, options)
       @merging          = parse_option(:merging, options)
       @shifting         = parse_option(:shifting, options)
+      @indexing         = parse_option(:indexing, options)
       @worker = setup_worker(worker)
       @shift_range = shift_range(@shifting)
     end
@@ -304,14 +306,29 @@ module LLT
 
     def create_tokens
       # call #to_a is to retrieve (and align) optional metrical data
+      reset_id
       @worker.to_a.map! do |el|
         case el
         when XML_TAG                  then Token::XmlTag.new(el)
-        when ABBR_NAME_WITH_DOT       then Token::Filler.new(el)
-        when ROMAN_DATE_EXPR_WITH_DOT then Token::Filler.new(el)
-        when PUNCT_ITSELF             then Token::Punctuation.new(el)
-        else                               Token::Word.new(el)
+        when ABBR_NAME_WITH_DOT       then raise_id and Token::Filler.new(el, @id)
+        when ROMAN_DATE_EXPR_WITH_DOT then raise_id and Token::Filler.new(el, @id)
+        when PUNCT_ITSELF             then raise_id and Token::Punctuation.new(el, @id)
+        else                               raise_id and Token::Word.new(el, @id)
         end
+      end
+    end
+
+    def reset_id
+      @id = (@indexing ? @id = 0 : nil)
+    end
+
+    def raise_id
+      if @indexing
+        @id += 1
+      else
+        # need to return true because this is used as first part
+        # of an and construction
+        true
       end
     end
 

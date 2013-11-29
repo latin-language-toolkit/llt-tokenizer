@@ -260,6 +260,18 @@ describe LLT::Tokenizer do
         end
       end
     end
+
+    it "attaches id's to tokens" do
+      txt = 'Cano.'
+      tokens = tokenizer.tokenize(txt)
+      tokens.map(&:id).should == [1, 2]
+    end
+
+    it "can be disabled" do
+      txt = 'Cano.'
+      tokens = tokenizer.tokenize(txt, indexing: false)
+      tokens.map(&:id).should == [nil, nil]
+    end
   end
 
   context "with options" do

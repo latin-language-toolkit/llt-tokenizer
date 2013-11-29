@@ -16,7 +16,7 @@ module LLT
 
     container_alias :forms
 
-    def initialize(string)
+    def initialize(string, id = nil)
       super
       @functions = set_functions
     end

@@ -272,6 +272,12 @@ describe LLT::Tokenizer do
       tokens = tokenizer.tokenize(txt, indexing: false)
       tokens.map(&:id).should == [nil, nil]
     end
+
+    it "doesn't count plain xml tags" do
+      txt = '<grc>text text</grc>'
+      tokens = tokenizer.tokenize(txt)
+      tokens.map(&:id).should == [nil, 1, 2, nil]
+    end
   end
 
   context "with options" do

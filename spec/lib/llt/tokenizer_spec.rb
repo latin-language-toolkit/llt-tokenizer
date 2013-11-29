@@ -92,9 +92,9 @@ describe LLT::Tokenizer do
 
           context "handles direct speech delimiters" do
             it "'" do
-              txt = "'Arma' inquit 'cano'."
+              txt = "'Arma', inquit 'cano'."
               tokens = tokenizer.tokenize(txt)
-              tokens.should have(8).items
+              tokens.should have(9).items
             end
 
             it '"' do

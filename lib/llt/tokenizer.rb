@@ -281,7 +281,9 @@ module LLT
     end
 
     def is_a_mergable_pair?(x, y)
-      MERGE_WORDS.any? { |a, b| a === x && b === y  }
+      # x, i.e. quam in quamdiu, needs to be downcased, as it could be in a
+      # sentence's first position
+      MERGE_WORDS.any? { |a, b| a === x.downcase && b === y  }
     end
 
     def merge_words(pair, i, to_delete)

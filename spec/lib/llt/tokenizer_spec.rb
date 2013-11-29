@@ -184,6 +184,7 @@ describe LLT::Tokenizer do
       end
 
       describe("quam diu")    { it { should be_transformed_to "quamdiu" } }
+      describe("Quam diu")    { it { should be_transformed_to "Quamdiu" } }
       describe("erat diu")    { it { should_not be_transformed_to "eratdiu" } }
       describe("non nullis")  { it { should be_transformed_to "nonnullis" } }
     end

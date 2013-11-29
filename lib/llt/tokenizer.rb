@@ -22,7 +22,7 @@ module LLT
       set_default_options(options)
     end
 
-    DEFAULTS = {
+    DEFAULT_OPTIONS = {
       shifting: true,
       enclitics_marker: '-',
       merging: true,
@@ -32,7 +32,7 @@ module LLT
     def set_default_options(opts)
       # do not want to capture any db instance here
       relevant_opts = opts.reject { |k, _| k == :db }
-      @default_options = DEFAULTS.merge(relevant_opts)
+      @default_options = DEFAULT_OPTIONS.merge(relevant_opts)
     end
 
     def self.tokenize(input)

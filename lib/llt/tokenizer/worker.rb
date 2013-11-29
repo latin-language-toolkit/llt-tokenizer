@@ -47,12 +47,12 @@ module LLT
 
             # If the bare element was a marked enclitic, it must have been
             # shifted. We're looking for the next metric token, that has it
-            # attached and try to find the string index where it starts to slice
-            # it of.
-            # Usually the metric element just scanned (y) will have it, if we don't
-            # find it, a double shift has occured and it should sit right at the current
-            # element of the metric ArrayScanner (m).
-            # The enclitic (sliced of x) has to be inserted one position before then.
+            # attached and try to find the string index where it starts to
+            # slice it of.
+            # Usually the metric element just scanned (y) will have it, if we
+            # don't find it, a double shift has occured and it should sit right
+            # at the current element of the metric ArrayScanner (m).
+            # The enclitic (sliced of x) has to be inserted one position before.
             if @marked_enclitics.include?(y)
               clean_encl_re = /#{y.dup.delete(@marker)}$/
               unless index = no_meter =~ clean_encl_re
@@ -61,18 +61,25 @@ module LLT
               end
               insert!(slice_encl!(x, index), m.pos - 1)
 
-            # If the dequantified metric element has an enclitic attached, the option
-            # shifting: false must have been given. The enclitic will follow right after
-            # in the @bare_text, we can therefore slice and insert right in place (the next
-            # scan round will reveal enclitic in metric_text == enclitic in bare_text
+            # If the dequantified metric element has an enclitic attached, the
+            # option shifting: false must have been given. The enclitic will
+            # follow right after in the @bare_text, we can therefore slice and
+            # insert right in place (the next # scan round will reveal that
+            # enclitic in metric_text == enclitic in bare_text
             elsif encl = ENCLITICS.find { |e| no_meter.end_with?(e) }
               index = no_meter =~ /#{encl}$/
               insert!(slice_encl!(x, index), m.pos)
 
-            # If the bare element has a dot attached, it must have been an abbreviation.
-            # The . will appear right afterwards in the metric text. We can delete it and
-            # append it to the last scanned metric element (x)
-            elsif y.end_with?('.')
+            # If the bare element has a dot attached, it must have been an
+            # abbreviation.
+            # The . will appear right afterwards in the metric text. We can
+            # delete it and append it to the last scanned metric element (x)
+            #
+            # We need to do the same if merge words were present.
+            # The last metric element was quam, the bare element is quamdiu.
+            # We append if the last metric element + the next metric element
+            # is the same as the bare element.
+            elsif y.end_with?('.') || merged_words_present?(no_meter, y, m)
               append_from_deleted_index!(x, m.pos)
             end
           end
@@ -90,6 +97,10 @@ module LLT
 
       def append_from_deleted_index!(token, index)
         token << @metric_text.delete_at(index)
+      end
+
+      def merged_words_present?(last_metric, last_bare, metric_arr_scanner)
+        (last_metric + wo_meter(metric_arr_scanner.peek)) == last_bare
       end
     end
   end

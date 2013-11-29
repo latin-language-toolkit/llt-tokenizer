@@ -3,15 +3,16 @@ require 'llt/helpers/functions'
 
 module LLT
   class Token
-    require 'llt/token/word'
-    require 'llt/token/punctuation'
-    require 'llt/token/filler'
-
     include Core::Containable
     include Helpers::Functions
     #include Phonology
 
+    require 'llt/token/word'
+    require 'llt/token/punctuation'
+    require 'llt/token/filler'
+
     attr_reader :functions, :special_roles
+
     container_alias :forms
 
     def initialize(string)

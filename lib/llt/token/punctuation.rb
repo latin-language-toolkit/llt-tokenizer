@@ -1,6 +1,8 @@
 module LLT
   class Token
     class Punctuation < Token
+      xml_tag 'p'
+
       attr_accessor :opening, :closing, :other
 
       def initialize(string)

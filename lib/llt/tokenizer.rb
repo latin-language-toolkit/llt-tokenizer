@@ -61,6 +61,8 @@ module LLT
       @shift_range = shift_range(@shifting)
     end
 
+    PUNCTUATION = /([\.\?,!;\-:"\(\)\[\]†])/
+
     # This is here for two reasons:
     #   1) easier test setup, when a preliminary result shall be further evaluated
     #
@@ -295,7 +297,7 @@ module LLT
 
     ABBR_NAME_WITH_DOT       = /^(#{NAMES_PIPED})\.$/
     ROMAN_DATE_EXPR_WITH_DOT = /^(#{DATES_PIPED})\.$/
-    PUNCTUATION = /([\.\?,!;\-:"\(\)\[\]†])/
+    PUNCT_ITSELF             = Regexp.new(PUNCTUATION.source + '$')
 
     def create_tokens
       # call #to_a is to retrieve (and align) optional metrical data
@@ -303,7 +305,7 @@ module LLT
         case el
         when ABBR_NAME_WITH_DOT       then Token::Filler.new(el)
         when ROMAN_DATE_EXPR_WITH_DOT then Token::Filler.new(el)
-        when PUNCTUATION              then Token::Punctuation.new(el)
+        when PUNCT_ITSELF             then Token::Punctuation.new(el)
         else                               Token::Word.new(el)
         end
       end

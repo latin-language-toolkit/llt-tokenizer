@@ -204,7 +204,7 @@ describe LLT::Tokenizer do
         tokenizer.create_tokens.first
       end
 
-      examples = { "Word"     => %w{ ita Marcus quoque },
+      examples = { "Word"     => %w{ ita Marcus quoque -que },
                    "Filler"   => %w{ M. Sex. App. Ap. Tib. Ti. C. a. d. Kal. Ian. }, #I XI MMC }
                    "Punctuation" => %w{ , . ! ? † ( ) [ ] } }
 

@@ -17,22 +17,13 @@ module LLT
 
     attr_reader :default_options
 
-    def initialize(options = {})
-      super
-      set_default_options(options)
-    end
-
-    DEFAULT_OPTIONS = {
-      shifting: true,
-      enclitics_marker: '-',
-      merging: true,
-      indexing: true,
-    }
-
-    def set_default_options(opts)
-      # do not want to capture any db instance here
-      relevant_opts = opts.reject { |k, _| k == :db }
-      @default_options = DEFAULT_OPTIONS.merge(relevant_opts)
+    def self.default_options
+      {
+        shifting: true,
+        enclitics_marker: '-',
+        merging: true,
+        indexing: true,
+      }
     end
 
     def self.tokenize(input)
@@ -86,12 +77,6 @@ module LLT
           elements
         end
       end
-    end
-
-    def parse_option(opt, options)
-      # we cannot just do option || true, because some options might
-      # be a totally legitimate false
-      (option = options[opt]).nil? ? @default_options[opt] : option
     end
 
     def shift_range(shifting_enabled)

@@ -52,30 +52,29 @@ describe LLT::Tokenizer do
         end
 
         context "with quantified text" do
+          it "handles unshifted" do
+            txt = 'M. Cicero pecūniam gaudĭămquĕ incolīs dabit.'
+            tokens = tokenizer.tokenize(txt, shifting: false).map(&:to_s)
+            tokens.should == %w{ M. Cicero pecūniam gaudĭăm -quĕ incolīs dabit . }
+          end
 
-        end
-        it "handles unshifted" do
-          txt = 'M. Cicero pecūniam gaudĭămquĕ incolīs dabit.'
-          tokens = tokenizer.tokenize(txt, shifting: false).map(&:to_s)
-          tokens.should == %w{ M. Cicero pecūniam gaudĭăm -quĕ incolīs dabit . }
-        end
+          it "handles shifted" do
+            txt = 'M. Cicero pecūniam gaudĭămquĕ incolīs dabit.'
+            tokens = tokenizer.tokenize(txt, shifting: true).map(&:to_s)
+            tokens.should == %w{ M. Cicero pecūniam -quĕ gaudĭăm incolīs dabit . }
+          end
 
-        it "handles shifted" do
-          txt = 'M. Cicero pecūniam gaudĭămquĕ incolīs dabit.'
-          tokens = tokenizer.tokenize(txt, shifting: true).map(&:to_s)
-          tokens.should == %w{ M. Cicero pecūniam -quĕ gaudĭăm incolīs dabit . }
-        end
+          it "handles double-shifted" do
+            txt = 'M. Cicero pecūniam Italia in eoquĕ dabit.'
+            tokens = tokenizer.tokenize(txt, shifting: true).map(&:to_s)
+            tokens.should == %w{ M. Cicero pecūniam Italia -quĕ in eo dabit . }
+          end
 
-        it "handles double-shifted" do
-          txt = 'M. Cicero pecūniam Italia in eoquĕ dabit.'
-          tokens = tokenizer.tokenize(txt, shifting: true).map(&:to_s)
-          tokens.should == %w{ M. Cicero pecūniam Italia -quĕ in eo dabit . }
-        end
-
-        it "handles merging" do
-          txt = 'Quăm diu M. Cicero pecūniam Italia dabit.'
-          tokens = tokenizer.tokenize(txt, shifting: true).map(&:to_s)
-          tokens.should == %w{ Quămdiu M. Cicero pecūniam Italia dabit . }
+          it "handles merging" do
+            txt = 'Quăm diu M. Cicero pecūniam Italia dabit.'
+            tokens = tokenizer.tokenize(txt, shifting: true).map(&:to_s)
+            tokens.should == %w{ Quămdiu M. Cicero pecūniam Italia dabit . }
+          end
         end
       end
     end
@@ -206,7 +205,7 @@ describe LLT::Tokenizer do
 
       examples = { "Word"     => %w{ ita Marcus quoque -que },
                    "Filler"   => %w{ M. Sex. App. Ap. Tib. Ti. C. a. d. Kal. Ian. }, #I XI MMC }
-                   "Punctuation" => %w{ , . ! ? † ( ) [ ] } }
+                   "Punctuation" => %w{ , . ! ? † ( ) [ ] .. -- } }
 
       examples.each do |klass, elements|
         elements.each do |e|

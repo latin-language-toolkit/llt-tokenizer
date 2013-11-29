@@ -63,7 +63,7 @@ module LLT
       @shift_range = shift_range(@shifting)
     end
 
-    PUNCTUATION = /([\.\?,!;\-:"'”\(\)\[\]†])\1*/
+    PUNCTUATION = /([\.\?,!;\-:"'”\(\)\[\]†]|<\/?.+?>)\1*/
 
     # This is here for two reasons:
     #   1) easier test setup, when a preliminary result shall be further evaluated
@@ -300,11 +300,13 @@ module LLT
     ABBR_NAME_WITH_DOT       = /^(#{NAMES_PIPED})\.$/
     ROMAN_DATE_EXPR_WITH_DOT = /^(#{DATES_PIPED})\.$/
     PUNCT_ITSELF             = Regexp.new(PUNCTUATION.source + '$')
+    XML_TAG                  = /<\/?.+?>/
 
     def create_tokens
       # call #to_a is to retrieve (and align) optional metrical data
       @worker.to_a.map! do |el|
         case el
+        when XML_TAG                  then Token::XmlTag.new(el)
         when ABBR_NAME_WITH_DOT       then Token::Filler.new(el)
         when ROMAN_DATE_EXPR_WITH_DOT then Token::Filler.new(el)
         when PUNCT_ITSELF             then Token::Punctuation.new(el)

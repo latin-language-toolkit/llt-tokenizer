@@ -10,6 +10,7 @@ module LLT
     require 'llt/token/word'
     require 'llt/token/punctuation'
     require 'llt/token/filler'
+    require 'llt/token/xml_tag'
 
     attr_reader :functions, :special_roles
 

@@ -110,6 +110,14 @@ describe LLT::Tokenizer do
             end
           end
         end
+
+        context "with embedded xml tags" do
+          it "doesn't break" do
+            txt = '<grc>text text</grc>'
+            tokens = tokenizer.tokenize(txt)
+            tokens.should have(4).items
+          end
+        end
       end
     end
 
@@ -237,9 +245,12 @@ describe LLT::Tokenizer do
         tokenizer.create_tokens.first
       end
 
-      examples = { "Word"     => %w{ ita Marcus quoque -que },
-                   "Filler"   => %w{ M. Sex. App. Ap. Tib. Ti. C. a. d. Kal. Ian. }, #I XI MMC }
-                   "Punctuation" => %w{ , . ! ? † ( ) [ ] ... -- ” " ' } }
+      examples = {
+        "Word"     => %w{ ita Marcus quoque -que },
+        "Filler"   => %w{ M. Sex. App. Ap. Tib. Ti. C. a. d. Kal. Ian. }, #I XI MMC }
+        "XmlTag"   => %w{ <grc> </grc> },
+        "Punctuation" => %w{ , . ! ? † ( ) [ ] ... -- ” " ' }
+      }
 
       examples.each do |klass, elements|
         elements.each do |e|

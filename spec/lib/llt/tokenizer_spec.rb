@@ -76,6 +76,14 @@ describe LLT::Tokenizer do
             tokens.should == %w{ Quămdiu M. Cicero pecūniam Italia dabit . }
           end
         end
+
+        context "with more exotic punctuation" do
+          it "handles -- as single Punctuation token" do
+            txt = 'Arma -- virum -- cano.'
+            tokens = tokenizer.tokenize(txt)
+            tokens.should have(6).items
+          end
+        end
       end
     end
 

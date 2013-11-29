@@ -63,7 +63,7 @@ module LLT
       @shift_range = shift_range(@shifting)
     end
 
-    PUNCTUATION = /([\.\?,!;\-:"\(\)\[\]†])/
+    PUNCTUATION = /([\.\?,!;\-:"\(\)\[\]†])\1*/
 
     # This is here for two reasons:
     #   1) easier test setup, when a preliminary result shall be further evaluated
@@ -77,7 +77,7 @@ module LLT
       if worker.any?
         worker
       else
-        elements = @text.gsub(PUNCTUATION, ' \1 ').split
+        elements = @text.gsub(PUNCTUATION, ' \0 ').split
         if metrical?
           Worker.new(elements, @enclitics_marker)
         else

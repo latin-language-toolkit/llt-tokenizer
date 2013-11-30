@@ -69,6 +69,28 @@ The Tokenizer takes several options upon creation or a call to #tokenize:
   # => ["Quamdiu", "cano", "?"]
 ```
 
+The returned items are instances of LLT::Token, which can be marked up
+in a variety of forms:
+
+```ruby
+  tokenizer = LLT::Tokenizer.new(shifting: false, indexing: true)
+  tokens = tokenizer.tokenize('Arma virumque cano.')
+  tokens.map(&:to_xml)
+  # => ["<w>arma<_w>", "<w>virum<_w>", "<w>-que<_w>", "<w>cano<_w>", "<pc>.<_pc>"]
+```
+
+Standard TEI XML markup is used: w tags for word tokens, pc tags for
+punctuation. The #to_xml method is highly flexible as well, for full
+coverage see _TODO_.
+
+```ruby
+  puts tokens.map { |token| token.to_xml(indexing: true) }
+  # <w n="1">Arma</w>
+  # <w n="2">virum</w>
+  # <w n="3">-que</w>
+  # <w n="4">cano</w>
+  # <pc n="5">.</pc>
+```
 
 
 ## Contributing

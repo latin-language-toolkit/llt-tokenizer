@@ -165,6 +165,7 @@ describe LLT::Tokenizer do
           "undique"   => "undique",
           "uterque"   => "uterque",
           "utriusque" => "utriusque",
+          "utcumque"  => "utcumque",
           "bonus laetusque et latus altusque" => "bonus -que laetus et latus -que altus",
         }
 

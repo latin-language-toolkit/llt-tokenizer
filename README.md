@@ -29,7 +29,7 @@ The LLT's Tokenizer makes use of stem dictionaries. Refer to [these instructions
   # => ["Arma", "-que", "virum", "cano", "."]
 ```
 
-The Tokenizer takes several options upon creation:
+The Tokenizer takes several options upon creation or a call to #tokenize:
 
 ```ruby
   # shifting determines if enclitics shall be moved to
@@ -56,10 +56,17 @@ The Tokenizer takes several options upon creation:
 
   # indexing determines if each token shall receive a consecutive id
 
-  tokens = tokenizer.tokenize('Arma virumque cano.')
+  tokens = tokenizer.tokenize('Arma virumque cano.', indexing: true)
   tokens.first.id # => 1
   tokens = tokenizer.tokenize('Arma virumque cano.', indexing: false)
   tokens.first.id # => nil
+
+  # merging enables token merging of lemmata, that often appear with
+  # orthographical inconsistencies
+
+  tokens = tokenizer.tokenizer('Quam diu cano?', merging: true)
+  tokens.map(&:to_s)
+  # => ["Quamdiu", "cano", "?"]
 ```
 
 

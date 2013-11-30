@@ -150,6 +150,7 @@ describe LLT::Tokenizer do
         examples = {
           "laetusque" => "-que laetus",
           "in eoque"  => "-que in eo",
+          "In eoque"  => "-que In eo",
           "ad eamque" => "-que ad eam",
           "ob easque" => "-que ob eas",
           "neque"     => "-que ne",

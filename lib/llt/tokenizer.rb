@@ -194,7 +194,7 @@ module LLT
     end
 
     def led_by_preposition?(index)
-      @worker[index - 1] =~ /^(in|ad|ob)$/ # and others
+      @worker[index - 1] =~ /^(in|ad|ob)$/i # and others
     end
 
     def ne_corrections

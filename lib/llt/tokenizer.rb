@@ -309,10 +309,10 @@ module LLT
       reset_id
       @worker.to_a.map! do |el|
         case el
-        when XML_TAG                  then Token::XmlTag.new(el)
+        when PUNCT_ITSELF             then raise_id and Token::Punctuation.new(el, @id)
         when ABBR_NAME_WITH_DOT       then raise_id and Token::Filler.new(el, @id)
         when ROMAN_DATE_EXPR_WITH_DOT then raise_id and Token::Filler.new(el, @id)
-        when PUNCT_ITSELF             then raise_id and Token::Punctuation.new(el, @id)
+        when XML_TAG                  then Token::XmlTag.new(el)
         else                               raise_id and Token::Word.new(el, @id)
         end
       end

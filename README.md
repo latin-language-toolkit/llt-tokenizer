@@ -20,6 +20,50 @@ Or install it yourself as:
 
 The LLT's Tokenizer makes use of stem dictionaries. Refer to [these instructions](http://github.com/latin-language-toolkit/llt-db_handler "llt-db_handler") on how to set one up.
 
+```ruby
+  require 'llt/tokenizer'
+ 
+  tokenizer = LLT::Tokenizer.new
+  tokens = tokenizer.tokenize('Arma virumque cano.')
+  tokens.map(&:to_s)
+  # => ["Arma", "-que", "virum", "cano", "."]
+```
+
+The Tokenizer takes several options upon creation:
+
+```ruby
+  # shifting determines if enclitics shall be moved to
+  # their functional position
+
+  tokenizer = LLT::Tokenizer.new(shifting: false)
+  tokens = tokenizer.tokenize('In eoque arma virumque cano.')
+  tokens.map(&:to_s)
+  # => ["-que", "In", "eo", "arma", "-que", "virum", "cano", "."]
+  
+  # all options can be passed directly to #tokenize to override
+  # the default options
+ 
+  tokens = tokenizer.tokenize('in eoque arma virumque cano.')
+  tokens.map(&:to_s)
+  # => ["in", "eo", "-que", "arma", "virum", "-que", "cano", "."]
+  
+  # enclitics_marker takes a string, which marks up splitted enclitics
+
+  tokenizer = LLT::Tokenizer.new(enclitics_marker: '--', shifting: false)
+  tokens = tokenizer.tokenize('Arma virumque cano.')
+  tokens.map(&:to_s)
+  # => ["Arma", "virum", "--que", "cano", "."]
+
+  # indexing determines if each token shall receive a consecutive id
+
+  tokens = tokenizer.tokenize('Arma virumque cano.')
+  tokens.first.id # => 1
+  tokens = tokenizer.tokenize('Arma virumque cano.', indexing: false)
+  tokens.first.id # => nil
+```
+
+
+
 ## Contributing
 
 1. Fork it

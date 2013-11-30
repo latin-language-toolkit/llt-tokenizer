@@ -35,16 +35,16 @@ The Tokenizer takes several options upon creation or a call to #tokenize:
   # shifting determines if enclitics shall be moved to
   # their functional position
   t = LLT::Tokenizer.new(shifting: true)
-  tokens = t.tokenize('In eoque arma virumque cano.')
+  tokens = t.tokenize('In eoque arma cano.')
   tokens.map(&:to_s)
-  # => ["-que", "In", "eo", "arma", "-que", "virum", "cano", "."]
+  # => ["-que", "In", "eo", "arma", "cano", "."]
   
   # all options can be passed directly to #tokenize to override
   # the default options
-  tokens = t.tokenize('in eoque arma virumque cano.', shifting:
+  tokens = t.tokenize('In eoque arma cano.', shifting:
 false)
   tokens.map(&:to_s)
-  # => ["in", "eo", "-que", "arma", "virum", "-que", "cano", "."]
+  # => ["In", "eo", "-que", "arma", "cano", "."]
   
   # enclitics_marker takes a string, which marks up splitted enclitics
   t = LLT::Tokenizer.new(enclitics_marker: '--', shifting: false)

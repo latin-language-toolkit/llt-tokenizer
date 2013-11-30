@@ -34,14 +34,15 @@ The Tokenizer takes several options upon creation or a call to #tokenize:
 ```ruby
   # shifting determines if enclitics shall be moved to
   # their functional position
-  tokenizer = LLT::Tokenizer.new(shifting: false)
+  tokenizer = LLT::Tokenizer.new(shifting: true)
   tokens = tokenizer.tokenize('In eoque arma virumque cano.')
   tokens.map(&:to_s)
   # => ["-que", "In", "eo", "arma", "-que", "virum", "cano", "."]
   
   # all options can be passed directly to #tokenize to override
   # the default options
-  tokens = tokenizer.tokenize('in eoque arma virumque cano.')
+  tokens = tokenizer.tokenize('in eoque arma virumque cano.', shifting:
+false)
   tokens.map(&:to_s)
   # => ["in", "eo", "-que", "arma", "virum", "-que", "cano", "."]
   

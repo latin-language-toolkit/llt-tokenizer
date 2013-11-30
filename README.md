@@ -23,8 +23,8 @@ The LLT's Tokenizer makes use of stem dictionaries. Refer to [these instructions
 ```ruby
   require 'llt/tokenizer'
  
-  tokenizer = LLT::Tokenizer.new
-  tokens = tokenizer.tokenize('Arma virumque cano.')
+  t = LLT::Tokenizer.new
+  tokens = t.tokenize('Arma virumque cano.')
   tokens.map(&:to_s)
   # => ["Arma", "-que", "virum", "cano", "."]
 ```
@@ -34,33 +34,33 @@ The Tokenizer takes several options upon creation or a call to #tokenize:
 ```ruby
   # shifting determines if enclitics shall be moved to
   # their functional position
-  tokenizer = LLT::Tokenizer.new(shifting: true)
-  tokens = tokenizer.tokenize('In eoque arma virumque cano.')
+  t = LLT::Tokenizer.new(shifting: true)
+  tokens = t.tokenize('In eoque arma virumque cano.')
   tokens.map(&:to_s)
   # => ["-que", "In", "eo", "arma", "-que", "virum", "cano", "."]
   
   # all options can be passed directly to #tokenize to override
   # the default options
-  tokens = tokenizer.tokenize('in eoque arma virumque cano.', shifting:
+  tokens = t.tokenize('in eoque arma virumque cano.', shifting:
 false)
   tokens.map(&:to_s)
   # => ["in", "eo", "-que", "arma", "virum", "-que", "cano", "."]
   
   # enclitics_marker takes a string, which marks up splitted enclitics
-  tokenizer = LLT::Tokenizer.new(enclitics_marker: '--', shifting: false)
-  tokens = tokenizer.tokenize('Arma virumque cano.')
+  t = LLT::Tokenizer.new(enclitics_marker: '--', shifting: false)
+  tokens = t.tokenize('Arma virumque cano.')
   tokens.map(&:to_s)
   # => ["Arma", "virum", "--que", "cano", "."]
 
   # indexing determines if each token shall receive a consecutive id
-  tokens = tokenizer.tokenize('Arma virumque cano.', indexing: true)
+  tokens = t.tokenize('Arma virumque cano.', indexing: true)
   tokens.first.id # => 1
-  tokens = tokenizer.tokenize('Arma virumque cano.', indexing: false)
+  tokens = t.tokenize('Arma virumque cano.', indexing: false)
   tokens.first.id # => nil
 
   # merging enables token merging of lemmata, that often appear with
   # orthographical inconsistencies
-  tokens = tokenizer.tokenizer('Quam diu cano?', merging: true)
+  tokens = t.tokenizer('Quam diu cano?', merging: true)
   tokens.map(&:to_s)
   # => ["Quamdiu", "cano", "?"]
 ```
@@ -69,8 +69,8 @@ The returned items are instances of LLT::Token, which can be marked up
 in a variety of forms:
 
 ```ruby
-  tokenizer = LLT::Tokenizer.new(shifting: false, indexing: true)
-  tokens = tokenizer.tokenize('Arma virumque cano.')
+  t = LLT::Tokenizer.new(shifting: false, indexing: true)
+  tokens = t.tokenize('Arma virumque cano.')
   tokens.map(&:to_xml)
   # => ["<w>arma<_w>", "<w>virum<_w>", "<w>-que<_w>", "<w>cano<_w>", "<pc>.<_pc>"]
 ```

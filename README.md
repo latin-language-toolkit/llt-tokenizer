@@ -1,6 +1,6 @@
 # LLT::Tokenizer
 
-TODO: Write a gem description
+Flexible service to tokenize Latin texts.
 
 ## Installation
 
@@ -41,8 +41,7 @@ The Tokenizer takes several options upon creation or a call to #tokenize:
   
   # all options can be passed directly to #tokenize to override
   # the default options
-  tokens = t.tokenize('In eoque arma cano.', shifting:
-false)
+  tokens = t.tokenize('In eoque arma cano.', shifting: false)
   tokens.map(&:to_s)
   # => ["In", "eo", "-que", "arma", "cano", "."]
   

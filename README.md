@@ -18,7 +18,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+The LLT's Tokenizer makes use of stem dictionaries. Refer to [these instructions](http://github.com/latin-language-toolkit/llt-db_handler "llt-db_handler") on how to set one up.
 
 ## Contributing
 

@@ -59,7 +59,7 @@ The Tokenizer takes several options upon creation or a call to #tokenize:
 
   # merging enables token merging of lemmata, that often appear with
   # orthographical inconsistencies
-  tokens = t.tokenizer('Quam diu cano?', merging: true)
+  tokens = t.tokenize('Quam diu cano?', merging: true)
   tokens.map(&:to_s)
   # => ["Quamdiu", "cano", "?"]
 ```

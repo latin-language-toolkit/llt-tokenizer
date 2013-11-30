@@ -103,7 +103,7 @@ module LLT
 
   ######################
 
-    WORDS_ENDING_WITH_QUE = /^([qc]u[ei].*que|qu[ao]que|itaque|atque|neque|ut[er].*que|plerumque|denique|undique)$/i
+    WORDS_ENDING_WITH_QUE = /^([qc]u[ei].*que|qu[ao]que|itaque|atque|ut[er].*que|plerumque|denique|undique)$/i # neque taken out!
     WORDS_ENDING_WITH_NE  = /^(omne|sine|bene|paene)$/i
     WORDS_ENDING_WITH_VE  = /^(sive)$/i
 
@@ -115,22 +115,26 @@ module LLT
     #
     # uterque, institutione, sive et al. remain
 
-    ENCLITICS = %w{ que ne ve }
+    ENCLITICS = %w{ que ne ve c }
     def split_enklitika_and_change_their_position
       split_with_force
+      split_nec
       make_frequent_corrections
     end
 
     def split_with_force
       # uses brute force at first
       # the restrictor regexps handle only obvious cases
-      ENCLITICS.each do |encl|
+
+      # don't use c here atm
+      ENCLITICS[0..-2].each do |encl|
         split_enklitikon(encl, self.class.const_get("WORDS_ENDING_WITH_#{encl.upcase}"))
       end
     end
 
     def split_enklitikon(encl, restrictors)
-      regexp = /(?<=\w)#{encl}$/  # needs a word character in front - ne itself should be contained
+      # needs a word character in front - ne itself should be contained
+      regexp = /(?<=\w)#{encl}$/
 
       indices = []
       @worker.each_with_index do |token, i|
@@ -145,6 +149,18 @@ module LLT
 
     def enclitic(val)
       "#{@enclitics_marker}#{val}"
+    end
+
+    def split_nec
+      indices = []
+      @worker.each_with_index do |token, i|
+        if token == 'nec'
+          token.slice!(-1)
+          indices << (i + indices.size + @shift_range)
+        end
+      end
+
+      indices.each { |i| @worker.insert(i, enclitic('c')) }
     end
 
     def make_frequent_corrections

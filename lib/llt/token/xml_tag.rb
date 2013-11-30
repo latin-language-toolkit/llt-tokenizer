@@ -9,6 +9,16 @@ module LLT
       def to_xml(*args)
         to_s
       end
+
+      def inspect
+        "#{'XML tag'.blue} #{tag_status}: #{to_s}"
+      end
+
+      private
+
+      def tag_status
+        to_s.match(/\//) ? 'open' : 'close'
+      end
     end
   end
 end

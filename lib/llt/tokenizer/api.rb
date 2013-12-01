@@ -8,6 +8,7 @@ class Api < Sinatra::Base
   helpers LLT::Core::Api::Helpers
 
   get '/tokenize' do
+    typecast_params!(params)
     text = extract_text(params)
     tokenizer = LLT::Tokenizer.new(params)
     tokens = tokenizer.tokenize(text)

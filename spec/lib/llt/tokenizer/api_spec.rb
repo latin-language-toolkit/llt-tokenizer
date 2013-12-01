@@ -46,15 +46,15 @@ describe "tokenizer api" do
         end
 
         it "receives params for tokenization and markup" do
-          pending
           params = { indexing: true }.merge(text)
 
           get '/tokenize', params,
             {"HTTP_ACCEPT" => "application/xml"}
           last_response.should be_ok
           body = last_response.body
-          body.should =~ /<s n="1">homo mittit\.<\/s>/
-          body.should =~ /<s n="2">Marcus est\.<\/s>/
+          body.should =~ /<w n="1">homo<\/w>/
+          body.should =~ /<w n="2">mittit<\/w>/
+          body.should =~ /<pc n="3">\.<\/pc>/
         end
       end
     end

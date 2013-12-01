@@ -13,10 +13,6 @@ describe "tokenizer api" do
 
   describe '/tokenize' do
     context "with URI as input" do
-      it "responds to GET" do
-        get '/tokenize'
-        last_response.should be_ok
-      end
     end
 
     let(:text) {{text: "homo mittit."}}

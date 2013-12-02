@@ -265,6 +265,11 @@ describe LLT::Tokenizer do
           end
         end
       end
+
+      it "handles complex xml tags with attributes as well" do
+        tokenizer.setup('', {}, ['<foreign lang="grc">'])
+        tokenizer.create_tokens.first.should be_an_instance_of LLT::Token::XmlTag
+      end
     end
 
     it "attaches id's to tokens" do
@@ -283,6 +288,13 @@ describe LLT::Tokenizer do
       txt = '<grc>text text</grc>'
       tokens = tokenizer.tokenize(txt)
       tokens.map(&:id).should == [nil, 1, 2, nil]
+    end
+
+    it "doesn't count xml tags when they come with attributes" do
+      txt = '<foreign lang="grc">Graeca</foreign> lingua est.'
+      tokens = tokenizer.tokenize(txt).map(&:to_s)
+      res = ['<foreign lang="grc">', 'Graeca', '</foreign>', 'lingua', 'est', '.']
+      tokens.should == res
     end
   end
 

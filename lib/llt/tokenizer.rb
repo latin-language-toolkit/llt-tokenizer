@@ -1,3 +1,4 @@
+require 'array_scanner'
 require 'llt/core'
 require 'llt/constants/abbreviations'
 require 'llt/core_extensions/array'
@@ -67,6 +68,7 @@ module LLT
         worker
       else
         elements = @text.gsub(PUNCTUATION, ' \0 ').split
+        put_xml_attributes_back_together(elements)
         if metrical?
           Worker.new(elements, @enclitics_marker)
         else
@@ -77,6 +79,27 @@ module LLT
 
     def shift_range(shifting_enabled)
       shifting_enabled ? 0 : 1
+    end
+
+    def put_xml_attributes_back_together(elements)
+      # elements could be like this
+      # ['<tag', 'attr1="val"', 'attr1="val>']
+      # and we want the complete xml tag back together
+      as = ArrayScanner.new(elements)
+      loop do
+        last = as.look_behind
+        if last && last.start_with?('<') &! last.end_with?('>')
+          if as.current.match(/w+=".*"$|>/)
+            last << ' ' << as.current
+            elements.delete_at(as.pos)
+            # we don't need to forward, as we delete an element anyway
+            next
+          end
+        else
+          as.forward(1)
+        end
+        break if as.eoa?
+      end
     end
 
 

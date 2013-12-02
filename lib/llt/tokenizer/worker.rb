@@ -1,4 +1,3 @@
-require 'array_scanner'
 require 'forwardable'
 
 module LLT

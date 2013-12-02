@@ -89,7 +89,7 @@ module LLT
       loop do
         last = as.look_behind
         if last && last.start_with?('<') &! last.end_with?('>')
-          if as.current.match(/w+=".*"$|>/)
+          if as.current.match(/\w+=".*"$|>/)
             last << ' ' << as.current
             elements.delete_at(as.pos)
             # we don't need to forward, as we delete an element anyway

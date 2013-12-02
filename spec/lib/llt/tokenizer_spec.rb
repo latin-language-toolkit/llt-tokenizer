@@ -303,6 +303,12 @@ describe LLT::Tokenizer do
       res = ['<l n="70">', '<foreign lang="lat">', 'Graeca', 'lingua', 'est', '.', '</foreign>', '</l>']
       tokens.should == res
     end
+
+    it "handles text with broken off xml tags (the rest will e.g. be in another sentence)" do
+      txt = "<lg org=\"uniform\" sample=\"complete\"><l>quem vocet divum populus ruentis</l><l>imperi rebus?"
+      tokens = tokenizer.tokenize(txt)
+      tokens.should have(12).items
+    end
   end
 
   context "with options" do

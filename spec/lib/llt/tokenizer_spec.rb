@@ -296,6 +296,13 @@ describe LLT::Tokenizer do
       res = ['<foreign lang="grc">', 'Graeca', '</foreign>', 'lingua', 'est', '.']
       tokens.should == res
     end
+
+    it "handles nested xml as well" do
+      txt = '<l n="70"><foreign lang="grc">Graeca lingua est.</foreign></l>'
+      tokens = tokenizer.tokenize(txt).map(&:to_s)
+      res = ['<l n="70">', '<foreign lang="grc">', 'Graeca', 'lingua', 'est', '.', '</foreign>', '</l>']
+      tokens.should == res
+    end
   end
 
   context "with options" do

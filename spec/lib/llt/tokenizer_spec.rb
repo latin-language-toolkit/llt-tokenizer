@@ -291,16 +291,16 @@ describe LLT::Tokenizer do
     end
 
     it "doesn't count xml tags when they come with attributes" do
-      txt = '<foreign lang="grc">Graeca</foreign> lingua est.'
+      txt = '<foreign lang="lat">Graeca</foreign> lingua est.'
       tokens = tokenizer.tokenize(txt).map(&:to_s)
-      res = ['<foreign lang="grc">', 'Graeca', '</foreign>', 'lingua', 'est', '.']
+      res = ['<foreign lang="lat">', 'Graeca', '</foreign>', 'lingua', 'est', '.']
       tokens.should == res
     end
 
     it "handles nested xml as well" do
-      txt = '<l n="70"><foreign lang="grc">Graeca lingua est.</foreign></l>'
+      txt = '<l n="70"><foreign lang="lat">Graeca lingua est.</foreign></l>'
       tokens = tokenizer.tokenize(txt).map(&:to_s)
-      res = ['<l n="70">', '<foreign lang="grc">', 'Graeca', 'lingua', 'est', '.', '</foreign>', '</l>']
+      res = ['<l n="70">', '<foreign lang="lat">', 'Graeca', 'lingua', 'est', '.', '</foreign>', '</l>']
       tokens.should == res
     end
   end

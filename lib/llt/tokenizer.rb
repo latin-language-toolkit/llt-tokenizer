@@ -25,7 +25,7 @@ module LLT
         merging: true,
         indexing: true,
         splitting: true,
-        xml: true,
+        xml: false,
       }
     end
 

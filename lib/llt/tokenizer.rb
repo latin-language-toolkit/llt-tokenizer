@@ -83,7 +83,7 @@ module LLT
 
     def put_xml_attributes_back_together(elements)
       # elements could be like this
-      # ['<tag', 'attr1="val"', 'attr1="val>']
+      # ['<tag', 'attr1="val"', 'attr1="val">']
       # and we want the complete xml tag back together
       as = ArrayScanner.new(elements)
       loop do

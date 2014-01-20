@@ -278,7 +278,7 @@ describe LLT::Tokenizer do
       tokens.map(&:id).should == [1, 2]
     end
 
-    it "can be disabled" do
+    it "id's can be disabled" do
       txt = 'Cano.'
       tokens = tokenizer.tokenize(txt, indexing: false)
       tokens.map(&:id).should == [nil, nil]

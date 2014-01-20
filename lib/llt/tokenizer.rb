@@ -25,6 +25,7 @@ module LLT
         merging: true,
         indexing: true,
         splitting: true,
+        xml: false,
       }
     end
 
@@ -51,11 +52,13 @@ module LLT
       @shifting         = parse_option(:shifting, options)
       @splitting        = parse_option(:splitting, options)
       @indexing         = parse_option(:indexing, options)
+      @xml              = parse_option(:xml, options)
       @worker = setup_worker(worker)
       @shift_range = shift_range(@shifting)
     end
 
-    PUNCTUATION = /([\.\?,!;\-:"'”&\(\)\[\]†]|<\/?.+?>)\1*/
+    PUNCTUATION = /&(?:amp|quot|apos|lt|gt);|([\.\?,!;\-:"'”&\(\)\[\]†<>])\1*/
+    XML_TAG = /<\/?.+?>/
 
     # This is here for two reasons:
     #   1) easier test setup, when a preliminary result shall be further evaluated
@@ -68,8 +71,9 @@ module LLT
     def setup_worker(worker)
       return worker if worker.any?
 
-      elements = @text.gsub(PUNCTUATION, ' \0 ').split
-      put_xml_attributes_back_together(elements)
+      elements = split_and_space_text
+      put_xml_attributes_back_together(elements) if @xml
+
       if metrical?
         Worker.new(elements, @enclitics_marker)
       else
@@ -81,25 +85,33 @@ module LLT
       shifting_enabled ? 0 : 1
     end
 
+    def split_and_space_text
+      regex = @xml ? Regexp.union(XML_TAG, PUNCTUATION) : PUNCTUATION
+      @text.gsub(regex, ' \0 ').split
+    end
+
     def put_xml_attributes_back_together(elements)
-      # elements could be like this
-      # ['<tag', 'attr1="val"', 'attr1="val>']
-      # and we want the complete xml tag back together
       as = ArrayScanner.new(elements)
       loop do
-        last = as.look_behind
-        if last && last.start_with?('<') &! last.end_with?('>')
-          if as.current.match(/\w+=".*"$|>/)
+        last = as.look_behind.to_s # catch nil
+        if open_xml_tag?(last)
+          number_of_xml_elements = as.peek_until do |el|
+            el.end_with?('>')
+          end.size + 1
+
+          number_of_xml_elements.times do
             last << ' ' << as.current
             elements.delete_at(as.pos)
-            # we don't need to forward, as we delete an element anyway
-            next
           end
         else
           as.forward(1)
         end
         break if as.eoa?
       end
+    end
+
+    def open_xml_tag?(str)
+      str.start_with?('<') &! str.end_with?('>')
     end
 
 

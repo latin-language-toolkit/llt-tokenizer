@@ -13,6 +13,7 @@ module LLT
         super
         # this is part of an old interface that is mostly unused
         # some parts remain - find and delete em
+        @string = xml_decode(string)
         @opening = false
         @closing = false
         @other   = false

@@ -255,7 +255,7 @@ describe LLT::Tokenizer do
         "Word"     => %w{ ita Marcus quoque -que },
         "Filler"   => %w{ M. Sex. App. Ap. Tib. Ti. C. a. d. Kal. Ian. }, #I XI MMC }
         "XmlTag"   => %w{ <grc> </grc> },
-        "Punctuation" => %w{ , . ! ? † ( ) [ ] ... -- ” " ' }
+        "Punctuation" => %w{ , . ! ? † ( ) [ ] ... -- ” " ' & }
       }
 
       examples.each do |klass, elements|

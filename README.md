@@ -51,6 +51,11 @@ The Tokenizer takes several options upon creation or a call to #tokenize:
   tokens.map(&:to_s)
   # => ["Arma", "virum", "--que", "cano", "."]
 
+  # splitting of enclitics can be disabled altogether
+  tokens = t.tokenize('Arma virumque cano.', splitting: false)
+  tokens.map(&:to_s)
+  # => ["Arma", "virumque", "cano", "."]
+
   # indexing determines if each token shall receive a consecutive id
   tokens = t.tokenize('Arma virumque cano.', indexing: true)
   tokens.first.id # => 1

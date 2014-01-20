@@ -18,10 +18,16 @@ describe LLT::Tokenizer do
       end
 
       it "handles all kinds of parens as well as cruces" do
-        txt = "Marcus (et Claudius) †amici† [sunt]."
+        txt = "<Marcus> (et Claudius) †amici† [sunt]."
         tokens = tokenizer.tokenize(txt)
-        tokens.should have(12).items
-        tokens.map(&:to_s).should == %w{ Marcus ( et Claudius ) † amici † [ sunt ] . }
+        tokens.should have(14).items
+        tokens.map(&:to_s).should == %w{ < Marcus > ( et Claudius ) † amici † [ sunt ] . }
+      end
+
+      it "handles escaped xml characters" do
+        txt = "&amp; &quot; &apos; &gt; &lt; ;"
+        tokens = tokenizer.tokenize(txt)
+        tokens.should have(6).items
       end
 
       describe "takes an optional keyword argument add_to" do
@@ -247,7 +253,7 @@ describe LLT::Tokenizer do
         "Word"     => %w{ ita Marcus quoque -que },
         "Filler"   => %w{ M. Sex. App. Ap. Tib. Ti. C. a. d. Kal. Ian. }, #I XI MMC }
         "XmlTag"   => %w{ <grc> </grc> },
-        "Punctuation" => %w{ , . ! ? † ( ) [ ] ... -- ” " ' & }
+        "Punctuation" => %w{ , . ! ? † ( ) [ ] ... -- ” " ' & < > &amp; &lt; &gt; &apos; &quot; }
       }
 
       examples.each do |klass, elements|
@@ -361,6 +367,12 @@ describe LLT::Tokenizer do
           txt = '<test>veni vidi <bad att="a a a">vici</bad></test>'
           tokens = xml_tokenizer.tokenize(txt)
           tokens.should have(7).items
+        end
+
+        it "expects all text chevrons to be escaped, otherwise they are xml tags!" do
+          txt = '<test>&lt;veni&gt;</test>'
+          tokens = xml_tokenizer.tokenize(txt)
+          tokens.should have(5).item
         end
       end
     end

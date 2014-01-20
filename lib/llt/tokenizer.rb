@@ -57,7 +57,7 @@ module LLT
       @shift_range = shift_range(@shifting)
     end
 
-    PUNCTUATION = /([\.\?,!;\-:"'”&\(\)\[\]†<>])\1*/
+    PUNCTUATION = /&(?:amp|quot|apos|lt|gt);|([\.\?,!;\-:"'”&\(\)\[\]†<>])\1*/
     XML_TAG = /<\/?.+?>/
 
     # This is here for two reasons:
@@ -88,10 +88,6 @@ module LLT
     def split_and_space_text
       regex = @xml ? Regexp.union(XML_TAG, PUNCTUATION) : PUNCTUATION
       @text.gsub(regex, ' \0 ').split
-    end
-
-    def spacing
-
     end
 
     def put_xml_attributes_back_together(elements)

@@ -313,7 +313,6 @@ describe LLT::Tokenizer do
     it "doesn't fall with spaces inside of xml attributes" do
        txt = '<test>veni vidi <bad att="a a a">vici</bad></test>'
        tokens = tokenizer.tokenize(txt)
-       puts tokens
        tokens.should have(7).items
     end
   end

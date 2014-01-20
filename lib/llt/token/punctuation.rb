@@ -1,7 +1,11 @@
+require 'xml_escape'
+
 module LLT
   class Token
     class Punctuation < Token
       xml_tag 'pc'
+
+      include XmlEscape
 
       attr_accessor :opening, :closing, :other
 
@@ -30,6 +34,10 @@ module LLT
 
       def inspect
         "#{"Punctuation token:".yellow} #{@string}"
+      end
+
+      def as_xml
+        xml_encode(@string)
       end
     end
   end

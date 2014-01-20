@@ -55,7 +55,7 @@ module LLT
       @shift_range = shift_range(@shifting)
     end
 
-    PUNCTUATION = /([\.\?,!;\-:"'”\(\)\[\]†]|<\/?.+?>)\1*/
+    PUNCTUATION = /(([\.\?,!\-:"'”\(\)\[\]†]|<\/?.+?>|&(amp|quot|lt|gt|);)|(?<!&amp|quot|lt|gt|apos);)\1*/
 
     # This is here for two reasons:
     #   1) easier test setup, when a preliminary result shall be further evaluated

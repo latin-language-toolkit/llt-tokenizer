@@ -309,6 +309,18 @@ describe LLT::Tokenizer do
       tokens = tokenizer.tokenize(txt)
       tokens.should have(12).items
     end
+
+    it "handles &amp; quot lt gt entities as punctuation" do
+       txt = "comperato &amp; explorato &quot;nihil&quot; eo &lt;aliud&gt;;"
+       tokens = tokenizer.tokenize(txt)
+       tokens.map(&:to_s).should == %w{ comperato &amp; explorato &quot; nihil &quot; eo &lt; aliud &gt; ; }
+    end
+
+    it "handles &apos; entity as word" do
+       txt = "comperato&apos; explorato,"
+       tokens = tokenizer.tokenize(txt)
+       tokens.map(&:to_s).should == %w{ comperato&apos; explorato , }
+    end
   end
 
   context "with options" do

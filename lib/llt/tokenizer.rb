@@ -24,6 +24,7 @@ module LLT
         enclitics_marker: '-',
         merging: true,
         indexing: true,
+        splitting: true,
       }
     end
 
@@ -34,7 +35,7 @@ module LLT
       setup(text, options)
 
       find_abbreviations_and_join_strings
-      split_enklitika_and_change_their_position
+      split_enklitika_and_change_their_position if @splitting
       merge_what_needs_merging if @merging # quam diu => quamdiu
       tokens = create_tokens
 
@@ -48,6 +49,7 @@ module LLT
       @enclitics_marker = parse_option(:enclitics_marker, options)
       @merging          = parse_option(:merging, options)
       @shifting         = parse_option(:shifting, options)
+      @splitting        = parse_option(:splitting, options)
       @indexing         = parse_option(:indexing, options)
       @worker = setup_worker(worker)
       @shift_range = shift_range(@shifting)

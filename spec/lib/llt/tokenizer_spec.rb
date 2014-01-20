@@ -346,6 +346,15 @@ describe LLT::Tokenizer do
           tokens.should == %w{ quam diu cano ? }
         end
       end
+
+      context "with disabled splitting" do
+        it "doesn't split enclitics" do
+          txt = 'arma virumque cano.'
+          opts = { splitting: false }
+          tokens = tokenizer.tokenize(txt, opts).map(&:to_s)
+          tokens.should == %w{ arma virumque cano . }
+        end
+      end
     end
   end
 

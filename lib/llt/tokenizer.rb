@@ -44,7 +44,7 @@ module LLT
     end
 
     def setup(text, options = {}, worker = [])
-      @text   = text
+      @text = text
       evaluate_metrical_presence(@text)
       @enclitics_marker = parse_option(:enclitics_marker, options)
       @merging          = parse_option(:merging, options)
@@ -66,16 +66,14 @@ module LLT
     #      if it's needed - which should perform better, when there
     #      are no metrics involved (the default case)
     def setup_worker(worker)
-      if worker.any?
-        worker
+      return worker if worker.any?
+
+      elements = @text.gsub(PUNCTUATION, ' \0 ').split
+      put_xml_attributes_back_together(elements)
+      if metrical?
+        Worker.new(elements, @enclitics_marker)
       else
-        elements = @text.gsub(PUNCTUATION, ' \0 ').split
-        put_xml_attributes_back_together(elements)
-        if metrical?
-          Worker.new(elements, @enclitics_marker)
-        else
-          elements
-        end
+        elements
       end
     end
 

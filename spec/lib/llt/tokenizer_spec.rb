@@ -359,7 +359,7 @@ describe LLT::Tokenizer do
   end
 
   context "with options on instance creation" do
-    it "a new instance can receive options, which it will use as it's defaults" do
+    it "a new instance can receive options, which it will use as its defaults" do
       custom_tok = LLT::Tokenizer.new(db: stub_db,
                                       shifting: false,
                                       enclitics_marker: '')

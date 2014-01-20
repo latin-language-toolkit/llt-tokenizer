@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe LLT::Token::Punctuation do
-  describe "#initialize", :focus do
+  describe "#initialize" do
     it "normalizes escaped xml characters" do
       punct = LLT::Token::Punctuation.new('&amp;')
       punct.to_s.should == '&'

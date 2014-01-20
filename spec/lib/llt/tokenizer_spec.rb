@@ -110,14 +110,6 @@ describe LLT::Tokenizer do
             end
           end
         end
-
-        context "with embedded xml tags" do
-          it "doesn't break" do
-            txt = '<grc>text text</grc>'
-            tokens = tokenizer.tokenize(txt)
-            tokens.should have(4).items
-          end
-        end
       end
     end
 
@@ -283,38 +275,6 @@ describe LLT::Tokenizer do
       tokens = tokenizer.tokenize(txt, indexing: false)
       tokens.map(&:id).should == [nil, nil]
     end
-
-    it "doesn't count plain xml tags" do
-      txt = '<grc>text text</grc>'
-      tokens = tokenizer.tokenize(txt)
-      tokens.map(&:id).should == [nil, 1, 2, nil]
-    end
-
-    it "doesn't count xml tags when they come with attributes" do
-      txt = '<foreign lang="lat">Graeca</foreign> lingua est.'
-      tokens = tokenizer.tokenize(txt).map(&:to_s)
-      res = ['<foreign lang="lat">', 'Graeca', '</foreign>', 'lingua', 'est', '.']
-      tokens.should == res
-    end
-
-    it "handles nested xml as well" do
-      txt = '<l n="70"><foreign lang="lat">Graeca lingua est.</foreign></l>'
-      tokens = tokenizer.tokenize(txt).map(&:to_s)
-      res = ['<l n="70">', '<foreign lang="lat">', 'Graeca', 'lingua', 'est', '.', '</foreign>', '</l>']
-      tokens.should == res
-    end
-
-    it "handles text with broken off xml tags (the rest will e.g. be in another sentence)" do
-      txt = "<lg org=\"uniform\" sample=\"complete\"><l>quem vocet divum populus ruentis</l><l>imperi rebus?"
-      tokens = tokenizer.tokenize(txt)
-      tokens.should have(12).items
-    end
-
-    it "doesn't fall with spaces inside of xml attributes" do
-       txt = '<test>veni vidi <bad att="a a a">vici</bad></test>'
-       tokens = tokenizer.tokenize(txt)
-       tokens.should have(7).items
-    end
   end
 
   context "with options" do
@@ -359,6 +319,48 @@ describe LLT::Tokenizer do
           opts = { splitting: false }
           tokens = tokenizer.tokenize(txt, opts).map(&:to_s)
           tokens.should == %w{ arma virumque cano . }
+        end
+      end
+
+      context "with xml handling enabled" do
+        let(:xml_tokenizer) { LLT::Tokenizer.new(db: stub_db, xml: true) }
+
+        it "doesn't break when xml is embedded" do
+          txt = '<grc>text text</grc>'
+          tokens = xml_tokenizer.tokenize(txt)
+          tokens.should have(4).items
+        end
+
+        it "doesn't count plain xml tags" do
+          txt = '<grc>text text</grc>'
+          tokens = xml_tokenizer.tokenize(txt)
+          tokens.map(&:id).should == [nil, 1, 2, nil]
+        end
+
+        it "doesn't count xml tags when they come with attributes" do
+          txt = '<foreign lang="lat">Graeca</foreign> lingua est.'
+          tokens = xml_tokenizer.tokenize(txt).map(&:to_s)
+          res = ['<foreign lang="lat">', 'Graeca', '</foreign>', 'lingua', 'est', '.']
+          tokens.should == res
+        end
+
+        it "handles nested xml as well" do
+          txt = '<l n="70"><foreign lang="lat">Graeca lingua est.</foreign></l>'
+          tokens = xml_tokenizer.tokenize(txt).map(&:to_s)
+          res = ['<l n="70">', '<foreign lang="lat">', 'Graeca', 'lingua', 'est', '.', '</foreign>', '</l>']
+          tokens.should == res
+        end
+
+        it "handles text with broken off xml tags (the rest will e.g. be in another sentence)" do
+          txt = "<lg org=\"uniform\" sample=\"complete\"><l>quem vocet divum populus ruentis</l><l>imperi rebus?"
+          tokens = xml_tokenizer.tokenize(txt)
+          tokens.should have(12).items
+        end
+
+        it "doesn't fall with spaces inside of xml attributes" do
+          txt = '<test>veni vidi <bad att="a a a">vici</bad></test>'
+          tokens = xml_tokenizer.tokenize(txt)
+          tokens.should have(7).items
         end
       end
     end

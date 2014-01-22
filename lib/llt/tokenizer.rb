@@ -129,7 +129,7 @@ module LLT
       arr = []
       @worker.each_with_index do |e, i|
         n = @worker[i + 1]
-        if (e =~ ABBREVIATIONS && n == ".") || (e =~ APOSTROPHE_WORDS && n == "'")
+        if (n == '.' && e =~ ABBREVIATIONS) || (n == "'" && e =~ APOSTROPHE_WORDS)
           @worker[i + 1] = n.prepend(e)
           arr << (i - arr.size)
         end

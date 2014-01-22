@@ -119,7 +119,9 @@ module LLT
 
     # covers abbreviated Roman praenomen like Ti. in Ti. Claudius Nero
     # covers Roman date expression like a. d. V. Kal. Apr.
+    # covers a list of words which are abbreviated with a ' like satin' for satisne
     ABBREVIATIONS = /^(#{ALL_ABBRS_PIPED})$/
+    APOSTROPHE_WORDS = /^(#{APOSTROPHES_PIPED})$/
 
     # %w{ Atque M . Cicero mittit } to %w{ Atque M. Cicero mittit }
 
@@ -127,7 +129,7 @@ module LLT
       arr = []
       @worker.each_with_index do |e, i|
         n = @worker[i + 1]
-        if e =~ ABBREVIATIONS && n == "."
+        if (e =~ ABBREVIATIONS && n == ".") || (e =~ APOSTROPHE_WORDS && n == "'")
           @worker[i + 1] = n.prepend(e)
           arr << (i - arr.size)
         end
@@ -335,6 +337,7 @@ module LLT
   ######################
 
     ABBR_NAME_WITH_DOT       = /^(#{NAMES_PIPED})\.$/
+    ABBR_WITH_APOSTROPHE     = /^(#{APOSTROPHES_PIPED})'$/
     ROMAN_DATE_EXPR_WITH_DOT = /^(#{DATES_PIPED})\.$/
     PUNCT_ITSELF             = Regexp.new(PUNCTUATION.source + '$')
     XML_TAG                  = /<\/?.+?>/
@@ -347,6 +350,7 @@ module LLT
         when XML_TAG                  then Token::XmlTag.new(el)
         when ABBR_NAME_WITH_DOT       then raise_id and Token::Filler.new(el, @id)
         when ROMAN_DATE_EXPR_WITH_DOT then raise_id and Token::Filler.new(el, @id)
+        when ABBR_WITH_APOSTROPHE     then raise_id and Token::Word.new(el, @id)
         when PUNCT_ITSELF             then raise_id and Token::Punctuation.new(el, @id)
         else                               raise_id and Token::Word.new(el, @id)
         end

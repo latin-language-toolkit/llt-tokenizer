@@ -120,7 +120,7 @@ describe LLT::Tokenizer do
     end
 
     describe "#find_abbreviations_and_join_strings" do
-      describe "should bring back abbreviation dots" do
+      describe "should bring back abbreviation dots and apostrophes" do
         it "with names" do
           tokenizer.setup("", {}, %w{ Atque Sex . et M . Cicero . })
           tokenizer.find_abbreviations_and_join_strings
@@ -131,6 +131,12 @@ describe LLT::Tokenizer do
           tokenizer.setup("", {}, %w{ a . d . V Kal . Apr . })
           tokenizer.find_abbreviations_and_join_strings
           tokenizer.preliminary.should == %w{ a. d. V Kal. Apr. }
+        end
+
+        it "with apostrophe" do
+          tokenizer.setup("", {}, %w{ ' Apostrophi ' sunt : po ' min ' vin ' tun' scin ' potin ' satin ' })
+          tokenizer.find_abbreviations_and_join_strings
+          tokenizer.preliminary.should == %w{ ' Apostrophi ' sunt : po' min' vin' tun' scin' potin' satin' }
         end
       end
     end
@@ -250,7 +256,7 @@ describe LLT::Tokenizer do
       end
 
       examples = {
-        "Word"     => %w{ ita Marcus quoque -que },
+        "Word"     => %w{ ita Marcus quoque -que po' },
         "Filler"   => %w{ M. Sex. App. Ap. Tib. Ti. C. a. d. Kal. Ian. }, #I XI MMC }
         "XmlTag"   => %w{ <grc> </grc> },
         "Punctuation" => %w{ , . ! ? † ( ) [ ] ... -- ” " ' & < > &amp; &lt; &gt; &apos; &quot; }

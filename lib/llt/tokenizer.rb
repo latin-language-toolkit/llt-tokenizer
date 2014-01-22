@@ -338,7 +338,7 @@ module LLT
 
     ABBR_NAME_WITH_DOT       = /^(#{NAMES_PIPED})\.$/
     ROMAN_DATE_EXPR_WITH_DOT = /^(#{DATES_PIPED})\.$/
-    PUNCT_ITSELF             = Regexp.new(PUNCTUATION.source + '$')
+    PUNCT_ITSELF             = Regexp.new("^(?:#{PUNCTUATION.source})$")
     XML_TAG                  = /<\/?.+?>/
 
     def create_tokens

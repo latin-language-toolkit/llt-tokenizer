@@ -119,8 +119,8 @@ module LLT
 
     # covers abbreviated Roman praenomen like Ti. in Ti. Claudius Nero
     # covers Roman date expression like a. d. V. Kal. Apr.
-    # covers a list of words which are abbreviated with a ' like satin' for satisne
     ABBREVIATIONS = /^(#{ALL_ABBRS_PIPED})$/
+    # covers a list of words which are abbreviated with a ' like satin' for satisne
     APOSTROPHE_WORDS = /^(#{APOSTROPHES_PIPED})$/
 
     # %w{ Atque M . Cicero mittit } to %w{ Atque M. Cicero mittit }

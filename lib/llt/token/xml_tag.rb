@@ -5,7 +5,7 @@ module LLT
         [:xml_tag]
       end
 
-      # overrides #to_xml from Containable - the tag stays at is it
+      # overrides #to_xml from Containable - the tag stays as it is
       def to_xml(*args)
         to_s
       end

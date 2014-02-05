@@ -17,7 +17,7 @@ module LLT
       private
 
       def tag_status
-        to_s.match(/\//) ? 'open' : 'close'
+        to_s.match(/\//) ? 'close' : 'open'
       end
     end
   end

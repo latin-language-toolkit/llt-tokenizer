@@ -207,6 +207,9 @@ describe LLT::Tokenizer do
 
           # ne itself should be contained
           "ne"         => "ne",
+
+          # nouns in vocative in o declension
+          "Pauline"   => "Pauline"
         }
 
         examples.each do |example, expected|

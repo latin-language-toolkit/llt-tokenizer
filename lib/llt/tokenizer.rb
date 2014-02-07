@@ -247,7 +247,13 @@ module LLT
           entries += lookup(orig_el + "n", :noun, :stem)    if orig_el =~ /mi$/   # flumi-ne agmi-ne
           entries += lookup(orig_el + "n", :adjective, :stem)                     # communis commune
 
+          entries += lookup(orig_el + "n", :persona, :stem, 2)                    # Pauli-ne
+
           if entries.any?(&:third_decl_with_possible_ne_abl?)
+            corrections << i - corrections.size
+          end
+
+          if entries.any?(&:o_decl_with_possible_ne_voc?)
             corrections << i - corrections.size
           end
         end

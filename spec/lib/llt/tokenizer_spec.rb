@@ -210,6 +210,7 @@ describe LLT::Tokenizer do
 
           # nouns in vocative in o declension
           "Pauline"   => "Pauline",
+          "domine"    => "domine",
 
           # adjective in vocative in a/o declension
           "bone"      => "bone",

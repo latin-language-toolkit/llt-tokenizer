@@ -165,12 +165,16 @@ describe LLT::Tokenizer do
           "denique"   => "denique",
           "itaque"    => "itaque",
           "plerumque" => "plerumque",
+          "plerosque" => "plerosque",
+          "plerique"  => "plerique",
+          "plerarumque"  => "plerarumque",
           "quaque"    => "quaque",
           "quemque"   => "quemque",
           "undique"   => "undique",
           "uterque"   => "uterque",
           "utriusque" => "utriusque",
           "utcumque"  => "utcumque",
+          "usque"     => "usque",
           "bonus laetusque et latus altusque" => "bonus -que laetus et latus -que altus",
         }
 

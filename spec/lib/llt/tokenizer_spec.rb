@@ -209,7 +209,10 @@ describe LLT::Tokenizer do
           "ne"         => "ne",
 
           # nouns in vocative in o declension
-          "Pauline"   => "Pauline"
+          "Pauline"   => "Pauline",
+
+          # adjective in vocative in a/o declension
+          "bone"      => "bone",
         }
 
         examples.each do |example, expected|

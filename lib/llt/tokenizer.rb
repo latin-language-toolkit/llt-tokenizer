@@ -245,7 +245,7 @@ module LLT
           entries += lookup(orig_el + "n", :persona, :stem) if orig_el =~ /o$/    # Plato-ne Cicero-ne Solo-ne
           entries += lookup(orig_el + "n", :noun, :stem)    if orig_el =~ /d?i$/  # fortitudi-ne ratio-ne libidi-ne homi-ne
           entries += lookup(orig_el + "n", :noun, :stem)    if orig_el =~ /mi$/   # flumi-ne agmi-ne
-          entries += lookup(orig_el + "n", :adjective, :stem)                     # communis commune
+          entries += lookup(orig_el + "n", :adjective, :stem)                     # communis commune, or bonus
 
           entries += lookup(orig_el + "n", :persona, :stem, 2)                    # Pauli-ne
 

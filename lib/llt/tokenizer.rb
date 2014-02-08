@@ -141,7 +141,7 @@ module LLT
   ######################
 
     WORDS_ENDING_WITH_QUE = /^([qc]u[ei].*que|qu[ao]que|itaque|atque|ut[er].*que|utcumque|pler(.{1,2}|[oa]rum)que|denique|undique|usque)$/i # neque taken out!
-    WORDS_ENDING_WITH_NE  = /^(omne|sine|bene|paene)$/i
+    WORDS_ENDING_WITH_NE  = /^(omne|sine|bene|paene|iuvene)$/i
     WORDS_ENDING_WITH_VE  = /^(sive|neve)$/i
 
     # laetusque  to -que laetus
@@ -151,6 +151,10 @@ module LLT
     # but
     #
     # uterque, institutione, sive et al. remain
+    #
+    # iuvene might come as a suprise in these lists - it's a hack, but
+    # special because it has ve and ne - both would get split. Such words
+    # might be so rare that we postpone proper handling for now
 
     ENCLITICS = %w{ que ne ve c }
     def split_enklitika_and_change_their_position

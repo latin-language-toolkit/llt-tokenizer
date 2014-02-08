@@ -205,8 +205,8 @@ module LLT
       # # TODO 27.11.13 14:15 by LFDM
       # Implement caching here
       ne_corrections
-      que_corrections
       ve_corrections
+      que_corrections
     end
 
     def que_corrections
@@ -243,8 +243,7 @@ module LLT
           entries = []
           entries += lookup(orig_el, :noun, :nom)           if orig_el =~ /io$/   # actio-ne ratio-ne
           entries += lookup(orig_el + "n", :persona, :stem) if orig_el =~ /o$/    # Plato-ne Cicero-ne Solo-ne
-          entries += lookup(orig_el + "n", :noun, :stem)    if orig_el =~ /d?i$/  # fortitudi-ne ratio-ne libidi-ne homi-ne
-          entries += lookup(orig_el + "n", :noun, :stem)    if orig_el =~ /mi$/   # flumi-ne agmi-ne
+          entries += lookup(orig_el + "n", :noun, :stem, [3, 33])    if orig_el =~ /[ei]$/ # fortitudi-ne ratio-ne libidi-ne homi-ne fi-ne agmi-ne iuve-ne
           entries += lookup(orig_el + "n", :noun, :stem, 2)                       # domi-ne
           entries += lookup(orig_el + "n", :adjective, :stem, [1,3])              # communis commune, or bonus
 

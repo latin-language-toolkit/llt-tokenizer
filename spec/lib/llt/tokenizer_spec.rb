@@ -193,11 +193,14 @@ describe LLT::Tokenizer do
           # frequent patterns in third declension nouns
           "ratione"      => "ratione",
           "magnitudine"  => "magnitudine",
+          "iactatione"   => "iactatione",
           "Platone"      => "Platone",
           "libidine"     => "libidine",
           "Solone"       => "Solone",
           "homine"       => "homine",
           "flumine"      => "flumine",
+          "fine"         => "fine",
+          "iuvene"       => "iuvene",
 
           # frequent patterns in third declension adjective
           "commune"    => "commune",

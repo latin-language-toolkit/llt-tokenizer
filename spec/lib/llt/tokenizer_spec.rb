@@ -176,6 +176,8 @@ describe LLT::Tokenizer do
           "utcumque"  => "utcumque",
           "usque"     => "usque",
           "bonus laetusque et latus altusque" => "bonus -que laetus et latus -que altus",
+          "quantumcumque" => "quantumcumque",
+          "quantulacumque" => "quantulacumque"
         }
 
         examples.each do |example, expected|

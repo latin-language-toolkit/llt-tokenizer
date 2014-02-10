@@ -140,7 +140,7 @@ module LLT
 
   ######################
 
-    WORDS_ENDING_WITH_QUE = /^([qc]u[ei].*que|qu[ao]que|itaque|atque|ut[er].*que|utcumque|pler(.{1,2}|[oa]rum)que|denique|undique|usque)$/i # neque taken out!
+    WORDS_ENDING_WITH_QUE = /^([qc]u[ei].*que|qu[ao]que|itaque|atque|ut[er].*que|.*cumque|pler(.{1,2}|[oa]rum)que|denique|undique|usque)$/i # neque taken out!
     WORDS_ENDING_WITH_NE  = /^(omne|sine|bene|paene|iuvene)$/i
     WORDS_ENDING_WITH_VE  = /^(sive|neve)$/i
 

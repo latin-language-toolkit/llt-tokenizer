@@ -207,6 +207,7 @@ describe LLT::Tokenizer do
           "flumine"      => "flumine",
           "fine"         => "fine",
           "iuvene"       => "iuvene",
+          "sanguine"     => "sanguine",
 
           # frequent patterns in third declension adjective
           "commune"    => "commune",

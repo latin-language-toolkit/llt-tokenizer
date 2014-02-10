@@ -247,6 +247,7 @@ describe LLT::Tokenizer do
           'move'     => 'move',
           'neve'     => 'neve',
           'cive'     => 'cive',
+          'Iove'     => 'Iove',
         }
 
         examples.each do |example, expected|

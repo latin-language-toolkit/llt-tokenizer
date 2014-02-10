@@ -276,9 +276,9 @@ module LLT
           entries += lookup(orig_el + 'v',  :adjective, :stem, 1)
           entries += lookup(orig_el + 'v',  :adjective, :stem, 3)
           entries += lookup(orig_el + 'v',  :noun,      :stem, [2, 33, 5])
+          entries += lookup(orig_el + 'v',  :persona,   :stem, 3)
           entries += lookup(orig_el + 've', :verb,      :pr,   2)
           entries += lookup(orig_el + 'v',  :verb,      :pr,   [3, 5]) # not sure if such a word of 5 exists
-
 
           if entries.any?
             corrections << i - corrections.size

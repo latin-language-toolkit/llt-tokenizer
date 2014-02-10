@@ -140,7 +140,7 @@ module LLT
 
   ######################
 
-    WORDS_ENDING_WITH_QUE = /^([qc]u[ei].*que|qu[ao]que|itaque|atque|ut[er].*que|utcumque|pler(.{1,2}|[oa]rum)que|denique|undique|usque)$/i # neque taken out!
+    WORDS_ENDING_WITH_QUE = /^((un.{1,3})?[qc]u[aei].*que|qu[ao]que|itaque|atque|ut[er].*que|.*cumque|pler(.{1,2}|[oa]rum)que|denique|undique|usque)$/i # neque taken out!
     WORDS_ENDING_WITH_NE  = /^(omne|sine|bene|paene|iuvene)$/i
     WORDS_ENDING_WITH_VE  = /^(sive|neve)$/i
 
@@ -276,9 +276,9 @@ module LLT
           entries += lookup(orig_el + 'v',  :adjective, :stem, 1)
           entries += lookup(orig_el + 'v',  :adjective, :stem, 3)
           entries += lookup(orig_el + 'v',  :noun,      :stem, [2, 33, 5])
+          entries += lookup(orig_el + 'v',  :persona,   :stem, 3)
           entries += lookup(orig_el + 've', :verb,      :pr,   2)
           entries += lookup(orig_el + 'v',  :verb,      :pr,   [3, 5]) # not sure if such a word of 5 exists
-
 
           if entries.any?
             corrections << i - corrections.size

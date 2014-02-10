@@ -176,6 +176,12 @@ describe LLT::Tokenizer do
           "utcumque"  => "utcumque",
           "usque"     => "usque",
           "bonus laetusque et latus altusque" => "bonus -que laetus et latus -que altus",
+          "quantumcumque" => "quantumcumque",
+          "quantulacumque" => "quantulacumque",
+          "unusquisque" => "unusquisque",
+          "quisque" => "quisque",
+          "quaeque" => "quaeque",
+          "uniuscuiusque" => "uniuscuiusque"
         }
 
         examples.each do |example, expected|
@@ -201,6 +207,7 @@ describe LLT::Tokenizer do
           "flumine"      => "flumine",
           "fine"         => "fine",
           "iuvene"       => "iuvene",
+          "sanguine"     => "sanguine",
 
           # frequent patterns in third declension adjective
           "commune"    => "commune",
@@ -241,6 +248,7 @@ describe LLT::Tokenizer do
           'move'     => 'move',
           'neve'     => 'neve',
           'cive'     => 'cive',
+          'Iove'     => 'Iove',
         }
 
         examples.each do |example, expected|

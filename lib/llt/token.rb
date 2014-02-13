@@ -34,6 +34,10 @@ module LLT
       @special_roles += roles
     end
 
+    def ==(other)
+      to_s.downcase == other.to_s.downcase
+    end
+
     # deprecated
     def add_form(form)
       @forms << form
@@ -46,6 +50,10 @@ module LLT
 
     def use(*args)
       # hook method, overwritten by Word
+    end
+
+    def set_functions(*args)
+      # hook method
     end
   end
 end

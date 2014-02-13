@@ -1,5 +1,11 @@
 # LLT::Tokenizer
 
+[![Version](http://allthebadges.io/latin-language-toolkit/llt-tokenizer/badge_fury.png)](http://allthebadges.io/latin-language-toolkit/llt-tokenizer/badge_fury)
+[![Dependencies](http://allthebadges.io/latin-language-toolkit/llt-tokenizer/gemnasium.png)](http://allthebadges.io/latin-language-toolkit/llt-tokenizer/gemnasium)
+[![Build Status](http://allthebadges.io/latin-language-toolkit/llt-tokenizer/travis.png)](http://allthebadges.io/latin-language-toolkit/llt-tokenizer/travis)
+[![Coverage](http://allthebadges.io/latin-language-toolkit/llt-tokenizer/coveralls.png)](http://allthebadges.io/latin-language-toolkit/llt-tokenizer/coveralls)
+[![Code Climate](http://allthebadges.io/latin-language-toolkit/llt-tokenizer/code_climate.png)](http://allthebadges.io/latin-language-toolkit/llt-tokenizer/code_climate)
+
 Flexible service to tokenize Latin texts.
 
 ## Installation

@@ -195,7 +195,7 @@ module LLT
     def split_nec
       indices = []
       @worker.each_with_index do |token, i|
-        if token == 'nec'
+        if token =~ /^nec$/i
           token.slice!(-1)
           indices << (i + indices.size + @shift_range)
         end

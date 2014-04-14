@@ -4,6 +4,8 @@ require 'llt/constants/abbreviations'
 require 'llt/core_extensions/array'
 require 'llt/db_handler/prometheus'
 require 'llt/helpers/metrical'
+require 'llt/tokenizer/version'
+require 'llt/tokenizer/version_info'
 
 module LLT
   class Tokenizer

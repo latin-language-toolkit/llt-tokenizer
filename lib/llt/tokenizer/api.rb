@@ -5,6 +5,7 @@ require 'llt/core/api'
 
 class Api < Sinatra::Base
   register Sinatra::RespondWith
+  register LLT::Core::Api::VersionRoutes
   helpers LLT::Core::Api::Helpers
 
   get '/tokenize' do
@@ -17,4 +18,6 @@ class Api < Sinatra::Base
       f.xml { to_xml(tokens, params) }
     end
   end
+
+  add_version_route_for('/tokenize', dependencies: %i{ Core Tokenizer })
 end

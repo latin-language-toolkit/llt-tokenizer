@@ -143,7 +143,7 @@ module LLT
   ######################
 
     WORDS_ENDING_WITH_QUE = /^((un.{1,3})?[qc]u[aei].*que|qu[ao]que|itaque|atque|ut[er].*que|.*cumque|pler(.{1,2}|[oa]rum)que|denique|undique|usque)$/i # neque taken out!
-    WORDS_ENDING_WITH_NE  = /^(omne|sine|bene|paene|iuvene)$/i
+    WORDS_ENDING_WITH_NE  = /^(omne|sine|bene|paene|iuvene|siccine)$/i # generalize these words and start to look for them in the db, especiialy for adverbs
     WORDS_ENDING_WITH_VE  = /^(sive|neve)$/i
 
     # laetusque  to -que laetus

@@ -324,6 +324,17 @@ module LLT
 
   ####Greek section#####
 
+  SPIRITUS_LENIS = %w(ὐ ἐ ἀ ἰ ὀ)
+  SPIRITUS_LENIS_WITH_GRAVE = %w(ἂ ἒ )
+  SPIRITUS_LENIS_WITH_ACUTE = %w(ἄ ἔ ὄ ὤ)
+  SPIRITUS_LENIS_WITH_CIRCUMFLEX = %w(ἶ ὖ ὦ )
+
+  SPIRITUS_ASPER = %w(ἁ ἑ ἡ ἱ ὁ ὑ ὡ)
+  SPIRITUS_ASPER_WITH_GRAVE = %w( ἃ ἣ ἳ)
+  SPIRITUS_ASPER_WITH_ACUTE = %w(ἕ ἵ ὅ ὕ)
+  SPIRITUS_ASPER_WITH_CIRCUMFLEX = %w(ὗ ὧ)
+
+  STARTING_VOWELS = %w()
   WORDS_WITH_KRASIS = { "κἄπειτα" => [ "καὶ", "ἔπειτα"]}
   def split_krasis
     @worker.each_with_index do |token, i|
@@ -332,6 +343,10 @@ module LLT
         @worker.flatten!
       end
     end
+  end
+
+  def krasis(token)
+    "#{token}#{@krasis_marker}"
   end
 
   ######################

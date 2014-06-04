@@ -38,6 +38,7 @@ module LLT
       setup(text, options)
 
       find_abbreviations_and_join_strings
+      split_krasis
       split_enklitika_and_change_their_position if @splitting
       merge_what_needs_merging if @merging # quam diu => quamdiu
       tokens = create_tokens
@@ -321,6 +322,17 @@ module LLT
       end
     end
 
+  ####Greek section#####
+
+  WORDS_WITH_KRASIS = { "κἄπειτα" => [ "καὶ", "ἔπειτα"]}
+  def split_krasis
+    @worker.each_with_index do |token, i|
+      if resolved_krasis = WORDS_WITH_KRASIS[token]
+        @worker[i] = resolved_krasis
+        @worker.flatten!
+      end
+    end
+  end
 
   ######################
 

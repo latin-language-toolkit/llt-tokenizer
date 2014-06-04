@@ -8,6 +8,30 @@ describe LLT::Tokenizer do
   let(:txt) { "Atque Sex. et M. Cicero." }
   let(:long_text) { "C. Caesar Antoniusque ratione superavit." }
   let(:date) { "a. d. V Kal. Apr." }
+  let(:greek_txt) { "καὶ διὰ τῆς περὶ τὴν ἀρχαιολογίαν συγγραφῆς."}
+  let(:krasis) { "κἄπειτα." }
+  let(:double_krasis) { "κἄπειτα τῆς περὶ τὴν ἀρχαιολογίαν κἄπειτα." }
+
+  context "with greek tokens" do
+    describe "#tokenize" do
+      it "tokenizes a string" do
+        tokenizer.tokenize(greek_txt).should have(8).items
+      end
+    end
+
+    describe "handles krasis" do
+      it "splits a krasis into two words" do
+        tokenizer.tokenize(krasis).should have(3).items
+      end
+
+      it "splits two kraseis in a sentence" do
+        res = tokenizer.tokenize(double_krasis)
+        res.should have(9).items
+        res[2].should == "τῆς"
+        res[8].should == "."
+      end
+    end
+  end
 
   context "with default options" do
     describe "#tokenize" do

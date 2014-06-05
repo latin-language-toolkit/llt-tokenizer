@@ -11,17 +11,25 @@ describe LLT::Tokenizer do
   let(:greek_txt) { "καὶ διὰ τῆς περὶ τὴν ἀρχαιολογίαν συγγραφῆς."}
   let(:krasis) { "κἄπειτα." }
   let(:double_krasis) { "κἄπειτα τῆς περὶ τὴν ἀρχαιολογίαν κἄπειτα." }
+  let(:diphtong) { "τοὔνομα." }
 
   context "with greek tokens" do
     describe "#tokenize" do
       it "tokenizes a string" do
-        tokenizer.tokenize(greek_txt).should have(8).items
+        res = tokenizer.tokenize(greek_txt)
+        res.should == %w(καὶ διὰ τῆς περὶ τὴν ἀρχαιολογίαν συγγραφῆς .)
+        res.should have(8).items
       end
     end
 
     describe "handles krasis" do
       it "splits a krasis into two words" do
         tokenizer.tokenize(krasis).should have(3).items
+      end
+
+      it "handles a dipthong krasis" do
+        res = tokenizer.tokenize(diphtong)
+        res.should have(3).items
       end
 
       it "splits two kraseis in a sentence" do

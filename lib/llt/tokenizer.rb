@@ -67,7 +67,7 @@ module LLT
       @shift_range = shift_range(@shifting)
     end
 
-    PUNCTUATION = /&(?:amp|quot|apos|lt|gt);|([\.\?,!;\-:"'”&\(\)\[\]†<>])\1*/
+    PUNCTUATION = /&(?:amp|quot|apos|lt|gt);|([\.\?,!;\-:"'”&\(\)\[\]†<>᾽])\1*/
     XML_TAG = /<\/?.+?>/
 
     # This is here for two reasons:
@@ -139,7 +139,7 @@ module LLT
       arr = []
       @worker.each_with_index do |e, i|
         n = @worker[i + 1]
-        if (n == '.' && e =~ ABBREVIATIONS) || (n == "'" && e =~ APOSTROPHE_WORDS)
+        if (n == '.' && e =~ ABBREVIATIONS) || (n == "'" && e =~ APOSTROPHE_WORDS) || greek_apostrophe(n,e)
           @worker[i + 1] = n.prepend(e)
           arr << (i - arr.size)
         end

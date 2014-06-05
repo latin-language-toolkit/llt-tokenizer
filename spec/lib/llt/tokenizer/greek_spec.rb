@@ -14,15 +14,20 @@ describe LLT::Tokenizer::Greek do
         res.should == %w(καὶ διὰ τῆς περὶ τὴν ἀρχαιολογίαν συγγραφῆς .)
         res.should have(8).items
       end
-    end
 
-    context "with options" do
-      context "with disabled splitting" do
-        it "doesn't split enclitics" do
-          txt = 'κἄπειτα.'
-          opts = { splitting: false }
-          tokens = tokenizer.tokenize(txt, opts).map(&:to_s)
-          tokens.should == %w{ κἄπειτα . }
+      describe "with a string that contains an apostrophe" do
+        it "returns one token to which the apostrophe is attached" do
+          txt = "εὖ δ᾽ ἴστε."
+          res = tokenizer.tokenize(txt)
+          res.should == %w(εὖ δ᾽ ἴστε .)
+          res.should have(4).items
+        end
+
+        it "splits two tokens combined by an apostrophe" do
+          txt = "εὖ δ᾽ἴστε."
+          res = tokenizer.tokenize(txt)
+          res.should == %w(εὖ δ᾽ ἴστε .)
+          res.should have(4).items
         end
       end
     end
@@ -44,6 +49,17 @@ describe LLT::Tokenizer::Greek do
         res.should have(9).items
         res[2].should == "τῆς"
         res[8].should == "."
+      end
+
+      context "with options" do
+        context "with disabled splitting" do
+          it "doesn't split krasis" do
+            txt = 'κἄπειτα.'
+            opts = { splitting: false }
+            tokens = tokenizer.tokenize(txt, opts).map(&:to_s)
+            tokens.should == %w{ κἄπειτα . }
+          end
+        end
       end
     end
   end

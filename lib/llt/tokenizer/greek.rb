@@ -61,6 +61,9 @@ module LLT
         end
       end
 
+      def greek_apostrophe(n, e)
+        (n == "᾽" && e =~ CONS)
+      end
     end
   end
 end

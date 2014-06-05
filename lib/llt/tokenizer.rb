@@ -30,6 +30,8 @@ module LLT
         indexing: true,
         splitting: true,
         xml: false,
+        #for Greek
+        krasis_marker: '-'
       }
     end
 
@@ -41,7 +43,7 @@ module LLT
 
       find_abbreviations_and_join_strings
       #for Greek
-      split_krasis
+      split_krasis if @splitting
       split_enklitika_and_change_their_position if @splitting
       merge_what_needs_merging if @merging # quam diu => quamdiu
       tokens = create_tokens
@@ -59,6 +61,8 @@ module LLT
       @splitting        = parse_option(:splitting, options)
       @indexing         = parse_option(:indexing, options)
       @xml              = parse_option(:xml, options)
+      #for Greek
+      @krasis_marker    = parse_option(:krasis_marker, options)
       @worker = setup_worker(worker)
       @shift_range = shift_range(@shifting)
     end

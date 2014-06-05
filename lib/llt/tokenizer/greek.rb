@@ -57,7 +57,7 @@ module LLT
 
       def contains_krasis(token)
         if token.match(/^(#{CONS})(#{PLAIN_VOWELS}?#{STARTING_VOWELS})(#{ALL}*)$/)
-          [$1, $2+$3]
+          [krasis($1), $2+$3]
         end
       end
 

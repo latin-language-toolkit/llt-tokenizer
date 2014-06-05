@@ -16,9 +16,22 @@ describe LLT::Tokenizer::Greek do
       end
     end
 
+    context "with options" do
+      context "with disabled splitting" do
+        it "doesn't split enclitics" do
+          txt = 'κἄπειτα.'
+          opts = { splitting: false }
+          tokens = tokenizer.tokenize(txt, opts).map(&:to_s)
+          tokens.should == %w{ κἄπειτα . }
+        end
+      end
+    end
+
     describe "handles krasis" do
       it "splits a krasis into two words" do
-        tokenizer.tokenize(krasis).should have(3).items
+        res = tokenizer.tokenize(krasis)
+        res.should have(3).items
+        res.should == %w( κ- ἄπειτα . )
       end
 
       it "handles a dipthong krasis" do
@@ -34,5 +47,4 @@ describe LLT::Tokenizer::Greek do
       end
     end
   end
-
 end

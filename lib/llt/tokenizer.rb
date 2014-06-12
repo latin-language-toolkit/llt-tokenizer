@@ -67,7 +67,7 @@ module LLT
       @shift_range = shift_range(@shifting)
     end
 
-    PUNCTUATION = /&(?:amp|quot|apos|lt|gt);|([\.\?,!;\-:"'”&\(\)\[\]†<>᾽])\1*/
+    PUNCTUATION = /&(?:amp|quot|apos|lt|gt);|([\.\?,!;\-:"'”&\(\)\[\]†<>᾽·])\1*/
     XML_TAG = /<\/?.+?>/
 
     # This is here for two reasons:

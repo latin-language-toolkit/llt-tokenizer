@@ -11,10 +11,12 @@ module LLT
   class Tokenizer
     require 'llt/token'
     require 'llt/tokenizer/worker'
+    require 'llt/tokenizer/greek'
 
     include Core::Serviceable
     include Constants::Abbreviations
     include Helpers::Metrical
+    include Greek
 
     uses_db { DbHandler::Prometheus.new }
 
@@ -28,6 +30,8 @@ module LLT
         indexing: true,
         splitting: true,
         xml: false,
+        #for Greek
+        krasis_marker: '-'
       }
     end
 
@@ -38,6 +42,8 @@ module LLT
       setup(text, options)
 
       find_abbreviations_and_join_strings
+      #for Greek
+      split_krasis if @splitting
       split_enklitika_and_change_their_position if @splitting
       merge_what_needs_merging if @merging # quam diu => quamdiu
       tokens = create_tokens
@@ -55,11 +61,13 @@ module LLT
       @splitting        = parse_option(:splitting, options)
       @indexing         = parse_option(:indexing, options)
       @xml              = parse_option(:xml, options)
+      #for Greek
+      @krasis_marker    = parse_option(:krasis_marker, options)
       @worker = setup_worker(worker)
       @shift_range = shift_range(@shifting)
     end
 
-    PUNCTUATION = /&(?:amp|quot|apos|lt|gt);|([\.\?,!;\-:"'”&\(\)\[\]†<>])\1*/
+    PUNCTUATION = /&(?:amp|quot|apos|lt|gt);|([\.\?,!;\-:"'”&\(\)\[\]†<>᾽·])\1*/
     XML_TAG = /<\/?.+?>/
 
     # This is here for two reasons:
@@ -131,7 +139,7 @@ module LLT
       arr = []
       @worker.each_with_index do |e, i|
         n = @worker[i + 1]
-        if (n == '.' && e =~ ABBREVIATIONS) || (n == "'" && e =~ APOSTROPHE_WORDS)
+        if (n == '.' && e =~ ABBREVIATIONS) || (n == "'" && e =~ APOSTROPHE_WORDS) || greek_apostrophe(n,e)
           @worker[i + 1] = n.prepend(e)
           arr << (i - arr.size)
         end
@@ -320,7 +328,6 @@ module LLT
         ow << splitted
       end
     end
-
 
   ######################
 

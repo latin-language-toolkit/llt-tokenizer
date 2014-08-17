@@ -260,6 +260,18 @@ describe LLT::Tokenizer do
           end
         end
       end
+
+      context "when confronted with -τε" do
+        examples = {
+          'οὐτε'  => '-τε οὐ'
+        }
+
+        examples.each do |example, expected|
+          it "transforms #{example} to #{expected}" do
+            enklitika_test(example).should be_transformed_to expected
+          end
+        end
+      end
     end
 
     describe "#merge_what_needs_merging" do

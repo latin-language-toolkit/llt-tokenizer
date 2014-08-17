@@ -169,7 +169,7 @@ module LLT
     ENCLITICS = %w{ que ne ve c }
     def split_enklitika_and_change_their_position
       split_with_force
-      split_nec
+      split_nec_and_oute
       make_frequent_corrections
     end
 
@@ -202,16 +202,22 @@ module LLT
       "#{@enclitics_marker}#{val}"
     end
 
-    def split_nec
-      indices = []
+    def split_nec_and_oute
+      nec_indices  = []
+      oute_indices = []
       @worker.each_with_index do |token, i|
-        if token =~ /^nec$/i
+        case token
+        when /^nec$/i
           token.slice!(-1)
-          indices << (i + indices.size + @shift_range)
+          nec_indices << (i + nec_indices.size + @shift_range)
+        when /^οὐτε$/i
+          token.slice!(-2, 2)
+          oute_indices << (i + oute_indices.size + @shift_range)
         end
       end
 
-      indices.each { |i| @worker.insert(i, enclitic('c')) }
+      nec_indices.each  { |i| @worker.insert(i, enclitic('c')) }
+      oute_indices.each { |i| @worker.insert(i, enclitic('τε')) }
     end
 
     def make_frequent_corrections

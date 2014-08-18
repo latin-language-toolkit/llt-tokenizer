@@ -152,7 +152,7 @@ module LLT
 
     WORDS_ENDING_WITH_QUE = /^((un.{1,3})?[qc]u[aei].*que|qu[ao]que|itaque|atque|ut[er].*que|.*cumque|pler(.{1,2}|[oa]rum)que|denique|undique|usque)$/i # neque taken out!
     WORDS_ENDING_WITH_NE  = /^(omne|sine|bene|paene|iuvene|siccine)$/i # generalize these words and start to look for them in the db, especiialy for adverbs
-    WORDS_ENDING_WITH_VE  = /^(sive|neve)$/i
+    WORDS_ENDING_WITH_VE  = /^()$/i # formerly had neve and sive, which we split now
 
     # laetusque  to -que laetus
     # in eoque   to -que in eo
@@ -169,7 +169,7 @@ module LLT
     ENCLITICS = %w{ que ne ve c }
     def split_enklitika_and_change_their_position
       split_with_force
-      split_nec_and_oute
+      split_frequent_enclitics # like latin c, ve or greek te, de
       make_frequent_corrections
     end
 
@@ -202,22 +202,24 @@ module LLT
       "#{@enclitics_marker}#{val}"
     end
 
-    def split_nec_and_oute
-      nec_indices  = []
-      oute_indices = []
+    ENCLITICS_MAP = {
+      /^(nec)$/i => 'c',
+      /^(ne|se)u$/i => 'u',
+      /^(nisi)$/i => 'si',
+      /^(οὐ|μή|εἰ)τε$/i => 'τε',
+      /^(οὐ|μή)δε$/i => 'δε',
+    }
+    def split_frequent_enclitics
+      container = []
       @worker.each_with_index do |token, i|
-        case token
-        when /^nec$/i
-          token.slice!(-1)
-          nec_indices << (i + nec_indices.size + @shift_range)
-        when /^οὐτε$/i
-          token.slice!(-2, 2)
-          oute_indices << (i + oute_indices.size + @shift_range)
+        ENCLITICS_MAP.each do |regex, encl|
+          if token.match(regex)
+            token.slice!(-encl.length, encl.length)
+            container << [encl, (i + container.size + @shift_range)]
+          end
         end
       end
-
-      nec_indices.each  { |i| @worker.insert(i, enclitic('c')) }
-      oute_indices.each { |i| @worker.insert(i, enclitic('τε')) }
+      container.each { |encl, i|@worker.insert(i, enclitic(encl)) }
     end
 
     def make_frequent_corrections

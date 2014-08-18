@@ -242,14 +242,14 @@ describe LLT::Tokenizer do
 
       context "when confronted with -ve" do
         examples = {
-          'sive'     => 'sive',
+          'sive'     => '-ve si',
+          'neve'     => '-ve ne',
           'pluresve' => '-ve plures',
           'aestive'  => 'aestive',
           'serve'    => 'serve',
           'suave'    => 'suave',
           'vive'     => 'vive',
           'move'     => 'move',
-          'neve'     => 'neve',
           'cive'     => 'cive',
           'Iove'     => 'Iove',
         }
@@ -261,9 +261,49 @@ describe LLT::Tokenizer do
         end
       end
 
+      context "when confronted with -u" do
+        examples = {
+          'seu' => '-u se',
+          'neu' => '-u ne'
+        }
+
+        examples.each do |example, expected|
+          it "transforms #{example} to #{expected}" do
+            enklitika_test(example).should be_transformed_to expected
+          end
+        end
+      end
+
+      context "when confronted with -si" do
+        examples = {
+          'nisi' => '-si ni'
+        }
+
+        examples.each do |example, expected|
+          it "transforms #{example} to #{expected}" do
+            enklitika_test(example).should be_transformed_to expected
+          end
+        end
+      end
+
       context "when confronted with -τε" do
         examples = {
-          'οὐτε'  => '-τε οὐ'
+          'οὐτε'  => '-τε οὐ',
+          'μήτε'  => '-τε μή',
+          'εἰτε'  => '-τε εἰ'
+        }
+
+        examples.each do |example, expected|
+          it "transforms #{example} to #{expected}" do
+            enklitika_test(example).should be_transformed_to expected
+          end
+        end
+      end
+
+      context "when confronted with -δε" do
+        examples = {
+          'οὐδε'  => '-δε οὐ',
+          'μήδε'  => '-δε μή'
         }
 
         examples.each do |example, expected|

@@ -263,7 +263,9 @@ describe LLT::Tokenizer do
 
       context "when confronted with -τε" do
         examples = {
-          'οὐτε'  => '-τε οὐ'
+          'οὐτε'  => '-τε οὐ',
+          'μήτε'  => '-τε μή',
+          'εἰτε'  => '-τε εἰ'
         }
 
         examples.each do |example, expected|

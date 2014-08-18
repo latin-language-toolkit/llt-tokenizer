@@ -210,7 +210,7 @@ module LLT
         when /^nec$/i
           token.slice!(-1)
           nec_indices << (i + nec_indices.size + @shift_range)
-        when /^οὐτε$/i
+        when /^(οὐ|μή|εἰ)τε$/i
           token.slice!(-2, 2)
           oute_indices << (i + oute_indices.size + @shift_range)
         end

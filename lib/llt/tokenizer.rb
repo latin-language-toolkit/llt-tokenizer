@@ -210,16 +210,16 @@ module LLT
       /^(οὐ|μή)δε$/i => 'δε',
     }
     def split_frequent_enclitics
-      ENCLITICS_MAP.each do |regex, encl|
-        container = []
-        @worker.each_with_index do |token, i|
+      container = []
+      @worker.each_with_index do |token, i|
+        ENCLITICS_MAP.each do |regex, encl|
           if token.match(regex)
             token.slice!(-encl.length, encl.length)
-            container << (i + container.size + @shift_range)
+            container << [encl, (i + container.size + @shift_range)]
           end
         end
-        container.each  { |i| @worker.insert(i, enclitic(encl)) }
       end
+      container.each { |encl, i|@worker.insert(i, enclitic(encl)) }
     end
 
     def make_frequent_corrections

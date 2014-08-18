@@ -261,11 +261,49 @@ describe LLT::Tokenizer do
         end
       end
 
+      context "when confronted with -u" do
+        examples = {
+          'seu' => '-u se',
+          'neu' => '-u ne'
+        }
+
+        examples.each do |example, expected|
+          it "transforms #{example} to #{expected}" do
+            enklitika_test(example).should be_transformed_to expected
+          end
+        end
+      end
+
+      context "when confronted with -si" do
+        examples = {
+          'nisi' => '-si ni'
+        }
+
+        examples.each do |example, expected|
+          it "transforms #{example} to #{expected}" do
+            enklitika_test(example).should be_transformed_to expected
+          end
+        end
+      end
+
       context "when confronted with -τε" do
         examples = {
           'οὐτε'  => '-τε οὐ',
           'μήτε'  => '-τε μή',
           'εἰτε'  => '-τε εἰ'
+        }
+
+        examples.each do |example, expected|
+          it "transforms #{example} to #{expected}" do
+            enklitika_test(example).should be_transformed_to expected
+          end
+        end
+      end
+
+      context "when confronted with -δε" do
+        examples = {
+          'οὐδε'  => '-δε οὐ',
+          'μήδε'  => '-δε μή'
         }
 
         examples.each do |example, expected|

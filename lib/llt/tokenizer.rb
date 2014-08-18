@@ -169,7 +169,7 @@ module LLT
     ENCLITICS = %w{ que ne ve c }
     def split_enklitika_and_change_their_position
       split_with_force
-      split_nec_and_oute
+      split_frequent_enclitics # like latin c, ve or greek te, de
       make_frequent_corrections
     end
 
@@ -202,22 +202,24 @@ module LLT
       "#{@enclitics_marker}#{val}"
     end
 
-    def split_nec_and_oute
-      nec_indices  = []
-      oute_indices = []
-      @worker.each_with_index do |token, i|
-        case token
-        when /^nec$/i
-          token.slice!(-1)
-          nec_indices << (i + nec_indices.size + @shift_range)
-        when /^(οὐ|μή|εἰ)τε$/i
-          token.slice!(-2, 2)
-          oute_indices << (i + oute_indices.size + @shift_range)
+    ENCLITICS_MAP = {
+      /^(nec)$/i => 'c',
+      /^(ne|se)u$/i => 'u',
+      /^(nisi)$/i => 'si',
+      /^(οὐ|μή|εἰ)τε$/i => 'τε',
+      /^(οὐ|μή)δε$/i => 'δε',
+    }
+    def split_frequent_enclitics
+      ENCLITICS_MAP.each do |regex, encl|
+        container = []
+        @worker.each_with_index do |token, i|
+          if token.match(regex)
+            token.slice!(-encl.length, encl.length)
+            container << (i + container.size + @shift_range)
+          end
         end
+        container.each  { |i| @worker.insert(i, enclitic(encl)) }
       end
-
-      nec_indices.each  { |i| @worker.insert(i, enclitic('c')) }
-      oute_indices.each { |i| @worker.insert(i, enclitic('τε')) }
     end
 
     def make_frequent_corrections

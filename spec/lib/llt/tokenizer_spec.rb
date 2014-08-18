@@ -242,14 +242,14 @@ describe LLT::Tokenizer do
 
       context "when confronted with -ve" do
         examples = {
-          'sive'     => 'sive',
+          'sive'     => '-ve si',
+          'neve'     => '-ve ne',
           'pluresve' => '-ve plures',
           'aestive'  => 'aestive',
           'serve'    => 'serve',
           'suave'    => 'suave',
           'vive'     => 'vive',
           'move'     => 'move',
-          'neve'     => 'neve',
           'cive'     => 'cive',
           'Iove'     => 'Iove',
         }

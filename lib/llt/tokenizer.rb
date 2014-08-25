@@ -202,18 +202,19 @@ module LLT
       "#{@enclitics_marker}#{val}"
     end
 
-    ENCLITICS_MAP = {
-      /^(nec)$/i => 'c',
-      /^(ne|se)u$/i => 'u',
-      /^(nisi)$/i => 'si',
-      /^(οὐ|μή|εἰ)τε$/i => 'τε',
-      /^(οὐ|μή)δε$/i => 'δε',
-    }
+    ENCLITICS_MAP = [
+      /^(ne)(c)$/i,
+      /^(ne|se)(u)$/i,
+      /^(ni)(si)$/i,
+      /^(οὐ|μή|εἰ)(τε)$/i,
+      /^(οὐ|μή)(δε)$/i
+    ]
     def split_frequent_enclitics
       container = []
       @worker.each_with_index do |token, i|
         ENCLITICS_MAP.each do |regex, encl|
-          if token.match(regex)
+          if m = token.match(regex)
+            encl = m[2]
             token.slice!(-encl.length, encl.length)
             container << [encl, (i + container.size + @shift_range)]
           end

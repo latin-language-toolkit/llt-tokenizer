@@ -206,8 +206,8 @@ module LLT
       /^(ne)(c)$/i,
       /^(ne|se)(u)$/i,
       /^(ni)(si)$/i,
-      /^(οὐ|μή|εἰ)(τε)$/i,
-      /^(οὐ|μή)(δε)$/i
+      /^(οὔ|μή|εἴ)(τε)$/i,
+      /^(οὐ|μή)(δ[ὲέε])$/i
     ]
     def split_frequent_enclitics
       container = []

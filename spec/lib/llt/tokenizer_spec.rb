@@ -459,6 +459,15 @@ describe LLT::Tokenizer do
           tokens = xml_tokenizer.tokenize(txt)
           tokens.should have(5).item
         end
+
+        it "handles tags with new lines" do
+          txt = '<div  
+rend="indent">text</div>'
+
+          tokens = xml_tokenizer.tokenize(txt).map(&:to_s)
+          res = ['<div rend="indent">', 'text', '</div>']
+          tokens.should == res
+        end
       end
     end
   end

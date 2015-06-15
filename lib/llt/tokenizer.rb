@@ -68,7 +68,7 @@ module LLT
     end
 
     PUNCTUATION = /&(?:amp|quot|apos|lt|gt);|([\.\?,!;\-:"'”&\(\)\[\]†<>᾽·])\1*/
-    XML_TAG = /<\/?.+?>/
+    XML_TAG = /<\/?.+?>/m
 
     # This is here for two reasons:
     #   1) easier test setup, when a preliminary result shall be further evaluated

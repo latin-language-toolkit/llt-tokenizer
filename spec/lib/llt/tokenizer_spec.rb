@@ -261,6 +261,26 @@ describe LLT::Tokenizer do
         end
       end
 
+      context "when confronted with -ue as alt. spelling for -ve" do
+        examples = {
+          'siue' => '-ue si',
+          'neue' => '-ue ne',
+          'quisque'  => 'quisque',
+          'praecipue' => 'praecipue'
+        }
+
+        examples.each do |example, expected|
+          it "transforms #{example} to #{expected}" do
+            enklitika_test(example).should be_transformed_to expected
+          end
+        end
+
+        it "transforms uentusue to -ue uentus" do
+          pending('missing alternative spelling handler')
+          enklitika_test('uentusue').should be_transformed_to 'ue -uentus'
+        end
+      end
+
       context "when confronted with -u" do
         examples = {
           'seu' => '-u se',

@@ -153,6 +153,7 @@ module LLT
     WORDS_ENDING_WITH_QUE = /^((un.{1,3})?[qc]u[aei].*que|qu[ao]que|itaque|atque|ut[er].*que|.*cumque|pler(.{1,2}|[oa]rum)que|denique|undique|usque)$/i # neque taken out!
     WORDS_ENDING_WITH_NE  = /^(omne|sine|bene|paene|iuvene|siccine)$/i # generalize these words and start to look for them in the db, especiialy for adverbs
     WORDS_ENDING_WITH_VE  = /^()$/i # formerly had neve and sive, which we split now
+    WORDS_ENDING_WITH_UE  = /^()$/i # not yet populated
 
     # laetusque  to -que laetus
     # in eoque   to -que in eo
@@ -166,7 +167,7 @@ module LLT
     # special because it has ve and ne - both would get split. Such words
     # might be so rare that we postpone proper handling for now
 
-    ENCLITICS = %w{ que ne ve c }
+    ENCLITICS = %w{ que ne ve ue c }
     def split_enklitika_and_change_their_position
       split_with_force
       split_frequent_enclitics # like latin c, ve or greek te, de
@@ -185,7 +186,8 @@ module LLT
 
     def split_enklitikon(encl, restrictors)
       # needs a word character in front - ne itself should be contained
-      regexp = /(?<=\w)#{encl}$/
+      # q in front is not allowed, otherwise we would match every que
+      regexp = /(?<=[^Qq])#{encl}$/
 
       indices = []
       @worker.each_with_index do |token, i|
@@ -286,18 +288,24 @@ module LLT
     end
 
     def ve_corrections
+      # contains ue correction
+      # ATTENTION: Since we don't have a stem normalizer, ue-splitting
+      # doesn't work correct in every case. e.g. uentus-ue won't be split,
+      # because the stem 'uent' cannot be found in our db!
       corrections = []
       @worker.each_with_index do |w, i|
-        if w == enclitic('ve')
+        if w.match(/^-([vu])e$/)
+          v_or_u = $1
+
           orig_el = original_word(i)
 
           entries = []
-          entries += lookup(orig_el + 'v',  :adjective, :stem, 1)
-          entries += lookup(orig_el + 'v',  :adjective, :stem, 3)
-          entries += lookup(orig_el + 'v',  :noun,      :stem, [2, 33, 5])
-          entries += lookup(orig_el + 'v',  :persona,   :stem, 3)
-          entries += lookup(orig_el + 've', :verb,      :pr,   2)
-          entries += lookup(orig_el + 'v',  :verb,      :pr,   [3, 5]) # not sure if such a word of 5 exists
+          entries += lookup(orig_el + v_or_u,       :adjective, :stem, 1)
+          entries += lookup(orig_el + v_or_u,       :adjective, :stem, 3)
+          entries += lookup(orig_el + v_or_u,       :noun,      :stem, [2, 33, 5])
+          entries += lookup(orig_el + v_or_u,       :persona,   :stem, 3)
+          entries += lookup(orig_el + v_or_u + 'e', :verb,      :pr,   2)
+          entries += lookup(orig_el + v_or_u,       :verb,      :pr,   [3, 5]) # not sure if such a word of 5 exists
 
           if entries.any?
             corrections << i - corrections.size
